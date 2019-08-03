@@ -332,10 +332,10 @@ def runCleanup():
 class FullBackupConfig(ConfigListScreen,Screen):
 	skin = """
 <screen position="center,center" size="640,455" title="FullBackup Configuration" >
-	<ePixmap name="red"    position="0,0"   zPosition="2" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />
-	<ePixmap name="green"  position="160,0" zPosition="2" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />
-	<ePixmap name="yellow" position="320,0" zPosition="2" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on" />
-	<ePixmap name="blue" position="480,0" zPosition="2" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on" />
+	<ePixmap name="red"    position="0,0"   zPosition="2" size="140,40" pixmap="buttons/red.png" transparent="1" alphatest="on" />
+	<ePixmap name="green"  position="160,0" zPosition="2" size="140,40" pixmap="buttons/green.png" transparent="1" alphatest="on" />
+	<ePixmap name="yellow" position="320,0" zPosition="2" size="140,40" pixmap="buttons/yellow.png" transparent="1" alphatest="on" />
+	<ePixmap name="blue" position="480,0" zPosition="2" size="140,40" pixmap="buttons/blue.png" transparent="1" alphatest="on" />
 
 	<widget name="key_red" position="0,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" /> 
 	<widget name="key_green" position="160,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" /> 
@@ -344,8 +344,8 @@ class FullBackupConfig(ConfigListScreen,Screen):
 
 	<widget name="config" position="10,40" size="630,227" scrollbarMode="showOnDemand" />
 	<widget name="status" position="10,280" size="630,140" font="Regular;16" />
-	<widget name="ButtonMenu" position="10,420" size="35,25" zPosition="3" pixmap="skin_default/buttons/key_menu.png" alphatest="on" />
-	<ePixmap alphatest="on" pixmap="skin_default/icons/clock.png" position="560,433" size="14,14" zPosition="3"/>
+	<widget name="ButtonMenu" position="10,420" size="35,25" zPosition="3" pixmap="buttons/key_menu.png" alphatest="on" />
+	<ePixmap alphatest="on" pixmap="icons/clock.png" position="560,433" size="14,14" zPosition="3"/>
 	<widget font="Regular;18" halign="left" position="585,430" render="Label" size="55,20" source="global.CurrentTime" transparent="1" valign="center" zPosition="3">
 		<convert type="ClockToText">Default</convert>
 	</widget>
@@ -718,9 +718,9 @@ class BackupConsole(Console):
 
 class FlashImageConfig(Screen):
 	skin = """<screen name="FlashImageConfig" position="center,center" size="560,440" title=" " >
-			<ePixmap pixmap="skin_default/buttons/red.png" position="0,0" size="140,40" alphatest="on" />
-			<ePixmap pixmap="skin_default/buttons/green.png" position="140,0" size="140,40" alphatest="on" />
-			<ePixmap pixmap="skin_default/buttons/yellow.png" position="280,0" size="140,40" alphatest="on" />
+			<ePixmap pixmap="buttons/red.png" position="0,0" size="140,40" alphatest="on" />
+			<ePixmap pixmap="buttons/green.png" position="140,0" size="140,40" alphatest="on" />
+			<ePixmap pixmap="buttons/yellow.png" position="280,0" size="140,40" alphatest="on" />
 			<widget source="key_red" render="Label" position="0,0" zPosition="1" size="140,40" font="Regular;18" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" />
 			<widget source="key_green" render="Label" position="140,0" zPosition="1" size="140,40" font="Regular;18" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" />
 			<widget source="key_yellow" render="Label" position="280,0" zPosition="1" size="140,40" font="Regular;18" halign="center" valign="center" backgroundColor="#a08500" transparent="1" />
@@ -1150,9 +1150,9 @@ class FlashImageConfig(Screen):
 
 class SearchOMBfile(Screen):
 	skin = """<screen name="SearchOMBfile" position="center,center" size="560,440" title=" " >
-			<ePixmap pixmap="skin_default/buttons/red.png" position="0,0" size="140,40" alphatest="on" />
-			<ePixmap pixmap="skin_default/buttons/green.png" position="140,0" size="140,40" alphatest="on" />
-			<ePixmap pixmap="skin_default/buttons/yellow.png" position="280,0" size="140,40" alphatest="on" />
+			<ePixmap pixmap="buttons/red.png" position="0,0" size="140,40" alphatest="on" />
+			<ePixmap pixmap="buttons/green.png" position="140,0" size="140,40" alphatest="on" />
+			<ePixmap pixmap="buttons/yellow.png" position="280,0" size="140,40" alphatest="on" />
 			<widget source="key_red" render="Label" position="0,0" zPosition="1" size="140,40" font="Regular;17" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" />
 			<widget source="key_green" render="Label" position="140,0" zPosition="1" size="140,40" font="Regular;17" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" />
 			<widget source="key_yellow" render="Label" position="280,0" zPosition="1" size="140,40" font="Regular;17" halign="center" valign="center" backgroundColor="#a08500" transparent="1" />
@@ -1627,8 +1627,8 @@ class DaysProfile(ConfigListScreen,Screen):
 			<widget name="config" position="0,0" size="400,180" scrollbarMode="showOnDemand" />
 			<widget name="key_red" position="0,190" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1"/> 
 			<widget name="key_green" position="140,190" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1"/> 
-			<ePixmap name="red"    position="0,190"   zPosition="2" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />
-			<ePixmap name="green"  position="140,190" zPosition="2" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />
+			<ePixmap name="red"    position="0,190"   zPosition="2" size="140,40" pixmap="buttons/red.png" transparent="1" alphatest="on" />
+			<ePixmap name="green"  position="140,190" zPosition="2" size="140,40" pixmap="buttons/green.png" transparent="1" alphatest="on" />
 		</screen>"""
 		
 	def __init__(self, session, args = 0):

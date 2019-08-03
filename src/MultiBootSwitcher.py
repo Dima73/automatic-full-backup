@@ -31,7 +31,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			<widget source="options" render="Label" position="10,132" size="580,25" font="Regular; 22" backgroundColor="#00000000" foregroundColor="#00ffffff" />
 			<widget name="description" position="10,170" size="580,23" font="Regular; 18" foregroundColor="#00ffffff" backgroundColor="#00000000" valign="center" />
 			<widget name="curbootmode" position="10,200" size="580,23" font="Regular; 18" foregroundColor="#00ffffff" backgroundColor="#00000000" valign="center" />
-			<ePixmap position="555,47" size="35,25" zPosition="2" pixmap="/usr/share/enigma2/skin_default/buttons/key_info.png" alphatest="blend" />
+			<ePixmap position="555,47" size="35,25" zPosition="2" pixmap="buttons/key_info.png" alphatest="blend" />
 			<widget source="key_red" render="Label" position="35,242" size="170,30" noWrap="1" zPosition="1" valign="center" font="Regular; 18" halign="left" backgroundColor="#00000000" foregroundColor="#00ffffff" />
 			<widget source="key_green" render="Label" position="228,242" size="170,30" noWrap="1" zPosition="1" valign="center" font="Regular; 18" halign="left" backgroundColor="#00000000" foregroundColor="#00ffffff" />
 			<widget source="key_yellow" render="Label" position="421,242" size="170,30" noWrap="1" zPosition="1" valign="center" font="Regular; 18" halign="left" backgroundColor="#00000000" foregroundColor="#00ffffff" />
