@@ -77,6 +77,10 @@ if [ -f /proc/stb/info/vumodel ] && [ ! -f /proc/stb/info/hwmodel ] && [ ! -f /p
 		echo "Found VU+ Duo 4K\n"
 		MTD_KERNEL="mmcblk0p6"
 		KERNELNAME="kernel_auto.bin"
+	elif [ $MODEL = "duo4kse" ] ; then
+		echo "Found VU+ Duo 4K SE\n"
+		MTD_KERNEL="mmcblk0p6"
+		KERNELNAME="kernel_auto.bin"
 	else
 		echo "No supported receiver found!\n"
 		exit 0
@@ -247,7 +251,7 @@ if [ $TYPE = "VU" ] || [ $TYPE = "QVIART" ] || [ $TYPE = "DREAMBOX" ] || [ $TYPE
 			echo "This file forces a reboot after the update" > "$MAINDEST/reboot.update"
 		fi
 	fi
-	if [ $MODEL = "zero4k" ] || [ $MODEL = "uno4k" ] || [ $MODEL = "uno4kse" ] || [ $MODEL = "ultimo4k" ] || [ $MODEL = "solo4k" ] || [ $MODEL = "duo4k" ] ; then
+	if [ $MODEL = "zero4k" ] || [ $MODEL = "uno4k" ] || [ $MODEL = "uno4kse" ] || [ $MODEL = "ultimo4k" ] || [ $MODEL = "solo4k" ] || [ $MODEL = "duo4k" ] || [ $MODEL = "duo4kse" ] ; then
 		echo "rename this file to 'mkpart.update' for forces create partition and kernel update." > "$MAINDEST/nomkpart.update"
 	fi
 	if [ -z "$CREATE_ZIP" ] ; then
