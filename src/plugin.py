@@ -113,14 +113,14 @@ config.plugins.fullbackup.where = ConfigText(default="none", fixed_size=False)
 config.plugins.fullbackup.autoscan = ConfigYesNo(default=True)
 config.plugins.fullbackup.autoscan_nelp = ConfigNothing()
 config.plugins.fullbackup.autoclean = ConfigSelection(default="0", choices=[
-		("0",_("cleanup disabled")),
-		("2",_("older than 2 days")),
-		("3",_("older than 3 days")),
+		("0", _("cleanup disabled")),
+		("2", _("older than 2 days")),
+		("3", _("older than 3 days")),
 		("7", _("older than 1 week")),
-		("14",_("older than 2 weeks")),
-		("21",_("older than 3 weeks")),
-		("28",_("older than 4 weeks")),
-		("91",_("older than 3 months")),
+		("14", _("older than 2 weeks")),
+		("21", _("older than 3 weeks")),
+		("28", _("older than 4 weeks")),
+		("91", _("older than 3 months")),
 		])
 config.plugins.extra_fullbackup = ConfigSubsection()
 config.plugins.extra_fullbackup.day_backup = ConfigSubDict()
@@ -327,10 +327,10 @@ def runCleanup():
 					date = time.mktime(time.strptime(s.group(1), '%Y%m%d_%H%M'))
 					if int(date) > olderthen:
 						continue
-					os.system('rm -rf %s/automatic_fullbackup/%s' % (destination,backup))
+					os.system('rm -rf %s/automatic_fullbackup/%s' % (destination, backup))
 
 
-class FullBackupConfig(ConfigListScreen,Screen):
+class FullBackupConfig(ConfigListScreen, Screen):
 	skin = """
 <screen position="center,center" size="640,455" title="FullBackup Configuration" >
 	<ePixmap name="red"    position="0,0"   zPosition="2" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />
@@ -582,12 +582,12 @@ class FullBackupConfig(ConfigListScreen,Screen):
 		config.plugins.fullbackup.where.save()
 		self.saveAll()
 		configfile.save()
-		self.close(True,self.session)
+		self.close(True, self.session)
 
 	def cancel(self):
 		for x in self["config"].list:
 			x[1].cancel()
-		self.close(False,self.session)
+		self.close(False, self.session)
 
 	def showOutput(self):
 		self["status"].setText(self.data)
@@ -711,7 +711,7 @@ class BackupConsole(Console):
 
 	def stopRunBackup(self):
 		if (self.run != len(self.cmdlist)):
-			self.session.openWithCallback(self.stopRunBackupAnswer, MessageBox,_("Do you really want to stop the creation of backup?"), MessageBox.TYPE_YESNO)
+			self.session.openWithCallback(self.stopRunBackupAnswer, MessageBox, _("Do you really want to stop the creation of backup?"), MessageBox.TYPE_YESNO)
 
 	def stopRunBackupAnswer(self, answer):
 		if answer:
@@ -1122,7 +1122,7 @@ class FlashImageConfig(Screen):
 					return
 			except:
 				pass
-			self.session.openWithCallback(self.doClosed, Console, text,cmdlist=[message, cmd])
+			self.session.openWithCallback(self.doClosed, Console, text, cmdlist=[message, cmd])
 
 	def doClosed(self):
 		if (len(self.imbeddedMiltiBoot) > 1 and not self.stop_enigma) or self.dualboot:
@@ -1145,7 +1145,7 @@ class FlashImageConfig(Screen):
 			filename = self.filelist.getFilename()
 			if dirname and filename:
 				try:
-					os.system('unzip -o %s%s -d %s' % (dirname,filename,dirname))
+					os.system('unzip -o %s%s -d %s' % (dirname, filename, dirname))
 					self.filelist.refresh()
 				except:
 					pass
@@ -1362,7 +1362,7 @@ class SearchOMBfile(Screen):
 			filename = self.filelist.getFilename()
 			if dirname and filename:
 				try:
-					os.system('unzip -o %s%s -d %s' % (dirname,filename,dirname))
+					os.system('unzip -o %s%s -d %s' % (dirname, filename, dirname))
 					self.filelist.refresh()
 				except:
 					pass
@@ -1590,21 +1590,21 @@ class AutoStartTimer:
 			runCleanup()
 			if config.plugins.fullbackup.message.value == "1":
 				if Standby.inStandby is None:
-					self.session.open(MessageBox,_("Starting Automatic Full Backup!\nOptions control panel will not be available 5-7 minutes.\nPlease wait ..."), MessageBox.TYPE_INFO, timeout=15)
+					self.session.open(MessageBox, _("Starting Automatic Full Backup!\nOptions control panel will not be available 5-7 minutes.\nPlease wait ..."), MessageBox.TYPE_INFO, timeout=15)
 				self.runTimer = eTimer()
 				self.runTimer.callback.append(self.startBackup)
-				self.runTimer.start(18000,True)
+				self.runTimer.start(18000, True)
 			elif config.plugins.fullbackup.message.value == "2":
 				if Standby.inStandby is None:
-					self.session.openWithCallback(self.confirmStartBackup, MessageBox,_("In the next few seconds to start Automatic Full Backup!\nOptions control panel will not be available 5-7 minutes.\nRun backup now?"), MessageBox.TYPE_YESNO, timeout=15)
+					self.session.openWithCallback(self.confirmStartBackup, MessageBox, _("In the next few seconds to start Automatic Full Backup!\nOptions control panel will not be available 5-7 minutes.\nRun backup now?"), MessageBox.TYPE_YESNO, timeout=15)
 				else:
 					self.runTimer = eTimer()
 					self.runTimer.callback.append(self.startBackup)
-					self.runTimer.start(18000,True)
+					self.runTimer.start(18000, True)
 			else:
 				self.runTimer = eTimer()
 				self.runTimer.callback.append(self.startBackup)
-				self.runTimer.start(18000,True)
+				self.runTimer.start(18000, True)
 			atLeast = 60
 		self.update(atLeast)
 
@@ -1621,9 +1621,9 @@ class AutoStartTimer:
 		if answer:
 			self.runTimer = eTimer()
 			self.runTimer.callback.append(self.startBackup)
-			self.runTimer.start(3000,True)
+			self.runTimer.start(3000, True)
 
-class DaysProfile(ConfigListScreen,Screen):
+class DaysProfile(ConfigListScreen, Screen):
 	skin = """
 			<screen position="center,center" size="400,230" title="Days Profile" >
 			<widget name="config" position="0,0" size="400,180" scrollbarMode="showOnDemand" />

@@ -135,13 +135,13 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 	def renameCB(self, newname):
 		if newname and newname != 'bootname' and newname != self.oldname:
 			if not os.path.exists('/boot/%s' % newname) and os.path.isfile('/boot/%s' % self.oldname):
-				ret = os.system("mv -fn '/boot/%s' '/boot/%s'" % (self.oldname,newname))
+				ret = os.system("mv -fn '/boot/%s' '/boot/%s'" % (self.oldname, newname))
 				if ret:
 					self.session.open(MessageBox, _('Rename failed!'), MessageBox.TYPE_ERROR)
 				else:
 					bootname = self.readlineFile('/boot/bootname').split('=')
 					if len(bootname) == 2 and bootname[1] == self.oldname:
-						self.writeFile('/boot/bootname', '%s=%s' % (bootname[0],newname))
+						self.writeFile('/boot/bootname', '%s=%s' % (bootname[0], newname))
 						self.getCurrent()
 						return
 					elif self.bootname == self.oldname:
@@ -252,7 +252,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 
 		#read current boxmode
 		try:
-			bootmode = boot.split('rootwait',1)[1].split('boxmode',1)[1].split("'",1)[0].split('=',1)[1].replace(' ','')
+			bootmode = boot.split('rootwait', 1)[1].split('boxmode', 1)[1].split("'", 1)[0].split('=', 1)[1].replace(' ', '')
 		except IndexError:
 			bootmode = ""
 		#find and verify current boxmode
@@ -368,7 +368,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			if 'boxmode' in ENTRY:
 				cmdx = 8
 				cmd4 = "rootwait"
-				bootmode = temp[7].split("%s_4.boxmode=" % MODEL_NAME)[1].replace("'",'')
+				bootmode = temp[7].split("%s_4.boxmode=" % MODEL_NAME)[1].replace("'", '')
 			setmode = self.optionsList[self.option][0].split('=')[1]
 			#verify entries
 			if cmdx != len(temp) or 'boot' != temp[0] or 'rw' != temp[5] or cmd4 != temp[6] or kernel != root - kernel - 1 or "'" != ENTRY[-1:]:
@@ -424,7 +424,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 		elif self.option_enabled:
 			for x in self.optionsList:
 				if (x[0] + "'" in boot or x[0] + " " in boot) and x[0] != self.optionsList[self.option][0]:
-					newboot = boot.replace(x[0],self.optionsList[self.option][0])
+					newboot = boot.replace(x[0], self.optionsList[self.option][0])
 					if self.optionsList[self.option][0] == "boxmode=1":
 						newboot = newboot.replace("520M@248M", "440M@328M")
 						newboot = newboot.replace("200M@768M", "192M@768M")
@@ -529,7 +529,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 		for name in os.listdir(PATH):
 			if os.path.isfile(os.path.join(PATH, name)):
 				try:
-					cmdline = self.read_startup("/boot/" + name).split("=",3)[3].split(" ",1)[0]
+					cmdline = self.read_startup("/boot/" + name).split("=", 3)[3].split(" ", 1)[0]
 				except IndexError:
 					continue
 				if cmdline in getextdevices("ext4") and not name == "STARTUP":
