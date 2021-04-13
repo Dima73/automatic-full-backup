@@ -10,6 +10,7 @@ import os
 from enigma import eTimer
 from plugin import MODEL_NAME, _
 
+
 def getextdevices(ext):
 	cmd = 'blkid -t TYPE=%s -o device' % ext
 	try:
@@ -19,6 +20,7 @@ def getextdevices(ext):
 	if extdevices:
 		extdevices = [x.strip() for x in extdevices.split(",")]
 	return extdevices
+
 
 class MultiBootSwitcher(ConfigListScreen, Screen):
 	skin = """

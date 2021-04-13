@@ -39,11 +39,13 @@ gettext.bindtextdomain("enigma2", resolveFilename(SCOPE_LANGUAGE))
 gettext.textdomain("enigma2")
 gettext.bindtextdomain("FullBackup", "%s%s" % (resolveFilename(SCOPE_PLUGINS), "Extensions/FullBackup/locale/"))
 
+
 def _(txt):
 	t = gettext.dgettext("FullBackup", txt)
 	if t == txt:
 		t = gettext.gettext(txt)
 	return t
+
 
 PLUGIN_VERSION = _(" ver. ") + "6.9"
 
@@ -168,6 +170,7 @@ if not os.path.exists(ofgwrite_bin):
 			os.chmod(SH4, 0755)
 			ofgwrite_bin = SH4
 
+
 def Freespace(dev):
 	try:
 		statdev = os.statvfs(dev)
@@ -176,6 +179,7 @@ def Freespace(dev):
 		return space
 	except:
 		return 0
+
 
 def check_hdd(dir=""):
 	if not os.path.exists(dir):
@@ -194,8 +198,10 @@ def check_hdd(dir=""):
 			return False
 	return True
 
+
 emmc_multiboot = MODEL_NAME in ("hd51", "vs1500", "h7")
 emmc_multiboot1 = MODEL_NAME in ("gbquad4k", "gbue4k")
+
 
 def runBlkid():
 	list = []
@@ -245,9 +251,11 @@ def runBlkid():
 			_session.openWithCallback(installUtilblkidCallback, MessageBox, _("Install util-linux-blkid?"), MessageBox.TYPE_YESNO)
 	return list
 
+
 def installUtilblkidCallback(answer):
 		if answer:
 			os.system("opkg update && opkg install util-linux-blkid && opkg install util-linux-sfdisk")
+
 
 def backupCommand():
 	try:
@@ -284,6 +292,7 @@ def backupCommand():
 	cmd += " " + config.plugins.fullbackup.where.value
 	return cmd
 
+
 def runBackup():
 	destination = config.plugins.fullbackup.where.value
 	if destination == 'none':
@@ -305,6 +314,7 @@ def runBackup():
 					open('/tmp/.fullbackup', 'wb').close()
 				except:
 					pass
+
 
 def runCleanup():
 	olderthen = int(config.plugins.fullbackup.autoclean.value)
@@ -656,6 +666,7 @@ class FullBackupConfig(ConfigListScreen, Screen):
 		self.data += str
 		self.showOutput()
 
+
 class BackupConsole(Console):
 	def __init__(self, session, title="Console", cmdlist=None, finishedCallback=None, closeOnSuccess=False, dir=None):
 		Console.__init__(self, session, title, cmdlist, finishedCallback, closeOnSuccess)
@@ -691,6 +702,7 @@ class BackupConsole(Console):
 	def extendedClosed(self):
 		text = _("Select action:")
 		menu = [(_("Exit"), "exit"), (_("Exit and eject device"), "umount")]
+
 		def extraAction(choice):
 			if choice:
 				if choice[1] == "exit":
@@ -717,6 +729,7 @@ class BackupConsole(Console):
 		if answer:
 			self.container.sendCtrlC()
 			self.stop_run = True
+
 
 class FlashImageConfig(Screen):
 	skin = """<screen name="FlashImageConfig" position="center,center" size="560,440" title=" " >
@@ -1150,6 +1163,7 @@ class FlashImageConfig(Screen):
 				except:
 					pass
 
+
 class SearchOMBfile(Screen):
 	skin = """<screen name="SearchOMBfile" position="center,center" size="560,440" title=" " >
 			<ePixmap pixmap="skin_default/buttons/red.png" position="0,0" size="140,40" alphatest="on" />
@@ -1367,8 +1381,10 @@ class SearchOMBfile(Screen):
 				except:
 					pass
 
+
 def main(session, **kwargs):
 	session.openWithCallback(doneConfiguring, FullBackupConfig)
+
 
 def doneConfiguring(session, retval):
 	"user has closed configuration, check new values...."
@@ -1378,6 +1394,8 @@ def doneConfiguring(session, retval):
 
 ##################################
 # Autostart section
+
+
 class AutoStartTimer:
 	def __init__(self, session):
 		self.session = session
@@ -1623,6 +1641,7 @@ class AutoStartTimer:
 			self.runTimer.callback.append(self.startBackup)
 			self.runTimer.start(3000, True)
 
+
 class DaysProfile(ConfigListScreen, Screen):
 	skin = """
 			<screen position="center,center" size="400,230" title="Days Profile" >
@@ -1678,6 +1697,7 @@ class DaysProfile(ConfigListScreen, Screen):
 			x[1].cancel()
 		self.close()
 
+
 def WakeupDayOfWeek():
 	start_day = -1
 	try:
@@ -1693,6 +1713,7 @@ def WakeupDayOfWeek():
 				return i
 	return start_day
 
+
 class GreatingManualBackup(MessageBox):
 	def __init__(self, session, dir):
 		try:
@@ -1704,6 +1725,7 @@ class GreatingManualBackup(MessageBox):
 		except:
 			MessageBox.__init__(self, session, _("Do you really want to create a full backup in directory %s ?") % dir, MessageBox.TYPE_YESNO)
 		self.skinName = "MessageBox"
+
 
 def msgManualBackupClosed(ret, curdir=None):
 	if ret and curdir is not None:
@@ -1743,21 +1765,26 @@ def msgManualBackupClosed(ret, curdir=None):
 		except:
 			pass
 
+
 def menu(menuid, **kwargs):
 	if menuid == "shutdown" and config.plugins.fullbackup.multiboot_switcher_standbymenu.value:
 		return [(_("MultiBoot switcher"), openMultiBootSwitcher, "multiboot_switcher", 4)]
  	return []
 
+
 from MultiBootSwitcher import MultiBootSwitcher
+
 
 def openMultiBootSwitcher(session, **kwargs):
 	session.open(MultiBootSwitcher)
+
 
 def getNextWakeup():
 	if autoStartTimer:
 		if config.plugins.fullbackup.enabled.value and config.plugins.fullbackup.deepstandby.value != "0" and config.plugins.fullbackup.where.value != 'none':
 			return autoStartTimer.getStatus()
 	return -1
+
 
 def autostart(reason, session=None, **kwargs):
 	global autoStartTimer
@@ -1767,6 +1794,7 @@ def autostart(reason, session=None, **kwargs):
 			_session = session
 			if autoStartTimer is None:
 				autoStartTimer = AutoStartTimer(session)
+
 
 def filescan_open(list, session, **kwargs):
 	try:
@@ -1779,6 +1807,7 @@ def filescan_open(list, session, **kwargs):
 			session.open(MessageBox, _("Read error current dir, sorry."), MessageBox.TYPE_ERROR)
 	except:
 		print "[FullBackup] read error current dir, sorry"
+
 
 def start_filescan(**kwargs):
 	from Components.Scanner import Scanner, ScanPath
@@ -1794,7 +1823,9 @@ def start_filescan(**kwargs):
 			openfnc=filescan_open,
 		)
 
+
 description = _("Full backup for all receivers") + PLUGIN_VERSION
+
 
 def Plugins(**kwargs):
 	return [
