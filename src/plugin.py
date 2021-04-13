@@ -95,7 +95,7 @@ elif os.path.exists("/proc/stb/info/hwmodel") and not os.path.exists("/proc/stb/
 		pass
 
 config.plugins.fullbackup = ConfigSubsection()
-config.plugins.fullbackup.wakeup = ConfigClock(default=((3*60) + 0) * 60) # 3:00
+config.plugins.fullbackup.wakeup = ConfigClock(default=((3 * 60) + 0) * 60) # 3:00
 config.plugins.fullbackup.enabled = ConfigEnableDisable(default=False)
 config.plugins.fullbackup.day_profile = ConfigSelection(choices=[("1", _("Press OK"))], default="1")
 config.plugins.fullbackup.deepstandby = ConfigSelection(default="0", choices=[
@@ -172,7 +172,7 @@ def Freespace(dev):
 	try:
 		statdev = os.statvfs(dev)
 		space = (statdev.f_bavail * statdev.f_frsize) / 1024
-		print "[FullBackup] Free space on %s = %i kilobytes" %(dev, space)
+		print "[FullBackup] Free space on %s = %i kilobytes" % (dev, space)
 		return space
 	except:
 		return 0
@@ -313,7 +313,7 @@ def runCleanup():
 		return
 	if olderthen and destination:
 		try:
-			backupList = os.listdir('%s/automatic_fullbackup'%(destination))
+			backupList = os.listdir('%s/automatic_fullbackup' % (destination))
 			backupList.sort()
 		except:
 			backupList = []
@@ -327,7 +327,7 @@ def runCleanup():
 					date = time.mktime(time.strptime(s.group(1), '%Y%m%d_%H%M'))
 					if int(date) > olderthen:
 						continue
-					os.system('rm -rf %s/automatic_fullbackup/%s'%(destination,backup))
+					os.system('rm -rf %s/automatic_fullbackup/%s' % (destination,backup))
 
 
 class FullBackupConfig(ConfigListScreen,Screen):
@@ -364,7 +364,7 @@ class FullBackupConfig(ConfigListScreen,Screen):
 		self["ButtonMenu"].hide()
 		hddchoises = [('none', 'None')]
 		for p in harddiskmanager.getMountedPartitions():
-			if os.path.exists(p.mountpoint) and os.access(p.mountpoint, os.F_OK|os.R_OK):
+			if os.path.exists(p.mountpoint) and os.access(p.mountpoint, os.F_OK | os.R_OK):
 				if p.mountpoint != '/':
 					d = os.path.normpath(p.mountpoint)
 					mountpoint = p.mountpoint
@@ -564,7 +564,7 @@ class FullBackupConfig(ConfigListScreen,Screen):
 		if not MODEL_NAME:
 			return
 		files = "^.*\.(zip|bin)"
-		if MODEL_NAME == "hd51" or MODEL_NAME == "solo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k"  or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k" or MODEL_NAME == "duo4kse" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "dm900" or MODEL_NAME == "dm920" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbue4k":
+		if MODEL_NAME == "hd51" or MODEL_NAME == "solo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k" or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k" or MODEL_NAME == "duo4kse" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "dm900" or MODEL_NAME == "dm920" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbue4k":
 			files = "^.*\.(zip|bz2|bin)"
 		elif BOX_NAME == "vu":
 			if MODEL_NAME == "solo2" or MODEL_NAME == "duo2" or MODEL_NAME == "solose" or MODEL_NAME == "zero" or MODEL_NAME == "fusionhd" or MODEL_NAME == "fusionhdse" or MODEL_NAME == "purehd":
@@ -737,7 +737,7 @@ class FlashImageConfig(Screen):
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText("")
 		self["key_yellow"] = StaticText("")
-		self["curdir"] = StaticText(_("current:  %s")%(curdir or ''))
+		self["curdir"] = StaticText(_("current:  %s") % (curdir or ''))
 		self.founds = False
 		self.filelist = FileList(curdir, matchingPattern=matchingPattern, enableWrapAround=True)
 		self.filelist.onSelectionChanged.append(self.__selChanged)
@@ -831,7 +831,7 @@ class FlashImageConfig(Screen):
 	def __selChanged(self):
 		self["key_yellow"].setText("")
 		self["key_green"].setText("")
-		self["curdir"].setText(_("current:  %s")%(self.getCurrentSelected()))
+		self["curdir"].setText(_("current:  %s") % (self.getCurrentSelected()))
 		file_name = self.getCurrentSelected()
 		try:
 			if not self.filelist.canDescent() and file_name != '' and file_name != '/':
@@ -873,7 +873,7 @@ class FlashImageConfig(Screen):
 				no_backup_files = []
 				text = _("Select parameter for start flash!\n")
 				text += _('For flashing your receiver files are needed:\n')
-				if os.path.exists("/proc/stb/info/hwmodel") and (MODEL_NAME.startswith('fusion')  or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k"):
+				if os.path.exists("/proc/stb/info/hwmodel") and (MODEL_NAME.startswith('fusion') or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k"):
 					if MODEL_NAME == "lunix3-4k" or MODEL_NAME == "lunix4k":
 						backup_files = [("rootfs.tar.bz2"), ("oe_kernel.bin")]
 						no_backup_files = ["kernel_cfe_auto.bin", "rootfs.bin", "root_cfe_auto.jffs2", "root_cfe_auto.bin"]
@@ -1145,7 +1145,7 @@ class FlashImageConfig(Screen):
 			filename = self.filelist.getFilename()
 			if dirname and filename:
 				try:
-					os.system('unzip -o %s%s -d %s'%(dirname,filename,dirname))
+					os.system('unzip -o %s%s -d %s' % (dirname,filename,dirname))
 					self.filelist.refresh()
 				except:
 					pass
@@ -1169,7 +1169,7 @@ class SearchOMBfile(Screen):
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText("")
 		self["key_yellow"] = StaticText("")
-		self["curdir"] = StaticText(_("current:  %s")%(curdir or ''))
+		self["curdir"] = StaticText(_("current:  %s") % (curdir or ''))
 		self.found_dir = found_dir
 		self.model = ''
 		self.txt = ''
@@ -1210,7 +1210,7 @@ class SearchOMBfile(Screen):
 	def __selChanged(self):
 		self["key_yellow"].setText("")
 		self["key_green"].setText("")
-		self["curdir"].setText(_("current:  %s")%(self.getCurrentSelected()))
+		self["curdir"].setText(_("current:  %s") % (self.getCurrentSelected()))
 		file_name = self.getCurrentSelected()
 		try:
 			if not self.filelist.canDescent() and file_name != '' and file_name != '/':
@@ -1321,7 +1321,7 @@ class SearchOMBfile(Screen):
 		dirname = self.filelist.getCurrentDirectory()
 		txt = _("Error creating zip archive!")
 		try:
-			tstamp =  time.strftime('%Y-%m-%d-%H:%M')
+			tstamp = time.strftime('%Y-%m-%d-%H:%M')
 			try:
 				name = about.getImageTypeString()
 				image_name = name.replace(' ', '').replace('\n', '').replace('\l', '').replace('\t', '')
@@ -1362,7 +1362,7 @@ class SearchOMBfile(Screen):
 			filename = self.filelist.getFilename()
 			if dirname and filename:
 				try:
-					os.system('unzip -o %s%s -d %s'%(dirname,filename,dirname))
+					os.system('unzip -o %s%s -d %s' % (dirname,filename,dirname))
 					self.filelist.refresh()
 				except:
 					pass
@@ -1408,7 +1408,7 @@ class AutoStartTimer:
 					next_timer = False
 					if not recordings:
 						for timer in NavigationInstance.instance.RecordTimer.timer_list:
-							if 0 < timer.begin - time.time() <= 60*5:
+							if 0 < timer.begin - time.time() <= 60 * 5:
 								next_timer = True
 								continue
 					if not recordings and not next_timer:
@@ -1479,7 +1479,7 @@ class AutoStartTimer:
 							))
 							if begin >= end:
 								end += 86400
-							if 0 < begin - time.time() <= 60*5 or abs(time.time() - begin) < 900 and end > time.time():
+							if 0 < begin - time.time() <= 60 * 5 or abs(time.time() - begin) < 900 and end > time.time():
 								start_deepstandy = False
 								if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/EPGSaveLoadConfiguration.py"):
 									try:
@@ -1551,10 +1551,10 @@ class AutoStartTimer:
 			if wakeup_day == -1:
 				return -1
 			if wake_up < now:
-				wake_up += 86400*wakeup_day 
+				wake_up += 86400 * wakeup_day 
 			else:
 				if not config.plugins.extra_fullbackup.day_backup[cur_day].value:
-					wake_up += 86400*wakeup_day
+					wake_up += 86400 * wakeup_day
 		else:
 			wake_up = -1
 		return wake_up
@@ -1571,10 +1571,10 @@ class AutoStartTimer:
 			if wakeup_day == -1:
 				return -1
 			if wake < now + atLeast:
-				wake += 86400*wakeup_day
+				wake += 86400 * wakeup_day
 			else:
 				if not config.plugins.extra_fullbackup.day_backup[cur_day].value:
-					wake += 86400*wakeup_day
+					wake += 86400 * wakeup_day
 			next = wake - now
 			self.timer.startLongTimer(next)
 		else:
@@ -1689,14 +1689,14 @@ def WakeupDayOfWeek():
 
 	if cur_day >= 0:
 		for i in range(1, 8):
-			if config.plugins.extra_fullbackup.day_backup[(cur_day+i)%7].value:
+			if config.plugins.extra_fullbackup.day_backup[(cur_day + i) % 7].value:
 				return i
 	return start_day
 
 class GreatingManualBackup(MessageBox):
 	def __init__(self, session, dir):
 		try:
-			if MODEL_NAME == "hd51" or MODEL_NAME == "vs1500"  or MODEL_NAME == "h7":
+			if MODEL_NAME == "hd51" or MODEL_NAME == "vs1500" or MODEL_NAME == "h7":
 				list = [(_("Yes"), True), (_("Yes") + _(" as recovery"), "recovery"), (_("No"), False)]
 				MessageBox.__init__(self, session, text=_("Do you really want to create a full backup in directory %s ?") % dir, list=list)
 			else:
