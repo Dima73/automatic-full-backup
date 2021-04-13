@@ -117,7 +117,8 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			idx = 0
 			blv = ''
 			for x in self.bootloaderList:
-				if idx: blv += ', '
+				if idx:
+					blv += ', '
 				blv += x
 				idx += 1
 			message = (_("Your box needs Bootloaderversion(s)\n\n%s\n\nto make compatible with Bootoptions!") % blv,) 

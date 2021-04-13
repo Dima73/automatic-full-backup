@@ -325,7 +325,8 @@ def runCleanup():
 				s = pattern.search(backup)
 				if not s is None:
 					date = time.mktime(time.strptime(s.group(1), '%Y%m%d_%H%M'))
-					if int(date) > olderthen: continue
+					if int(date) > olderthen:
+						continue
 					os.system('rm -rf %s/automatic_fullbackup/%s'%(destination,backup))
 
 
@@ -546,7 +547,8 @@ class FullBackupConfig(ConfigListScreen,Screen):
 	def keyOk(self):
 		ConfigListScreen.keyOK(self)
 		sel = self["config"].getCurrent() and self["config"].getCurrent()[1]
-		if sel is None:return
+		if sel is None:
+			return
 		if sel == config.plugins.fullbackup.day_profile:
 			self.session.open(DaysProfile)
 		elif sel == config.plugins.fullbackup.run_multbboot_switcher:
