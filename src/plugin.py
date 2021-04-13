@@ -113,10 +113,10 @@ config.plugins.fullbackup.where = ConfigText(default="none", fixed_size=False)
 config.plugins.fullbackup.autoscan = ConfigYesNo(default=True)
 config.plugins.fullbackup.autoscan_nelp = ConfigNothing()
 config.plugins.fullbackup.autoclean = ConfigSelection(default="0", choices=[
-		( "0",_("cleanup disabled")),
-		( "2",_("older than 2 days")),
-		( "3",_("older than 3 days")),
-		( "7", _("older than 1 week")),
+		("0",_("cleanup disabled")),
+		("2",_("older than 2 days")),
+		("3",_("older than 3 days")),
+		("7", _("older than 1 week")),
 		("14",_("older than 2 weeks")),
 		("21",_("older than 3 weeks")),
 		("28",_("older than 4 weeks")),
@@ -316,7 +316,7 @@ def runCleanup():
 			backupList = os.listdir('%s/automatic_fullbackup'%(destination))
 			backupList.sort()
 		except:
-			backupList = [ ]
+			backupList = []
 		if len(backupList) > 0:
 			import re
 			pattern = re.compile('^(\d{8}_\d{4})$', re.M)	# '%Y%m%d_%H%M'
@@ -370,7 +370,7 @@ class FullBackupConfig(ConfigListScreen,Screen):
 					mountpoint = p.mountpoint
 					if mountpoint.endswith('/'):
 						mountpoint = mountpoint[:-1]
-					hddchoises.append((d , mountpoint))
+					hddchoises.append((d, mountpoint))
 		if (current_path, current_path) in hddchoises:
 			default_path = current_path
 		else:
@@ -434,7 +434,7 @@ class FullBackupConfig(ConfigListScreen,Screen):
 	def onEntryChanged(self):
 		cur = self["config"].getCurrent()
 		if cur == self.configList[1]:
-			list = [ ]
+			list = []
 			if cur[1].value and len(self.configList) == len(self["config"].list):
 				list = self.configList + self.appendList 
 			elif not cur[1].value and len(self.configList) < len(self["config"].list):
@@ -1697,7 +1697,7 @@ class GreatingManualBackup(MessageBox):
 	def __init__(self, session, dir):
 		try:
 			if MODEL_NAME == "hd51" or MODEL_NAME == "vs1500"  or MODEL_NAME == "h7":
-				list = [ (_("Yes"), True), (_("Yes") + _(" as recovery"), "recovery"), (_("No"), False) ]
+				list = [(_("Yes"), True), (_("Yes") + _(" as recovery"), "recovery"), (_("No"), False)]
 				MessageBox.__init__(self, session, text=_("Do you really want to create a full backup in directory %s ?") % dir, list=list)
 			else:
 				MessageBox.__init__(self, session, _("Do you really want to create a full backup in directory %s ?") % dir, MessageBox.TYPE_YESNO)
