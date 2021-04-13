@@ -123,7 +123,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 					blv += ', '
 				blv += x
 				idx += 1
-			message = (_("Your box needs Bootloaderversion(s)\n\n%s\n\nto make compatible with Bootoptions!") % blv,) 
+			message = (_("Your box needs Bootloaderversion(s)\n\n%s\n\nto make compatible with Bootoptions!") % blv,)
 		self.session.open(MessageBox, message[self.option], MessageBox.TYPE_INFO)
 
 	def rename(self):
@@ -166,7 +166,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			f.close()
 			return True
 		except IOError:
-			print "[MultiBoot switcher] write error file: %s" % FILE 
+			print "[MultiBoot switcher] write error file: %s" % FILE
 			return False
 
 	def readlineFile(self, FILE):
@@ -177,7 +177,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 				data = f.readline().replace('\n', '')
 				f.close()
 			except:
-				print "[MultiBoot switcher] error read file: %s" % FILE 
+				print "[MultiBoot switcher] error read file: %s" % FILE
 		return data
 
 	def getCurrent(self):

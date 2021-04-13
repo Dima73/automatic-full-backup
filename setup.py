@@ -12,4 +12,3 @@ setup(name='enigma2-plugin-extensions-automatic-fullbackup',
 		description='automatic full backup and manual flashing image',
 		cmdclass=setup_translate.cmdclass,
 	)
-

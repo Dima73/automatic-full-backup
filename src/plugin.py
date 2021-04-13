@@ -348,8 +348,8 @@ class FullBackupConfig(ConfigListScreen, Screen):
 	<ePixmap name="yellow" position="320,0" zPosition="2" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on" />
 	<ePixmap name="blue" position="480,0" zPosition="2" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on" />
 
-	<widget name="key_red" position="0,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" /> 
-	<widget name="key_green" position="160,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" /> 
+	<widget name="key_red" position="0,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" />
+	<widget name="key_green" position="160,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" />
 	<widget name="key_yellow" position="320,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" />
 	<widget name="key_blue" position="480,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" />
 
@@ -446,7 +446,7 @@ class FullBackupConfig(ConfigListScreen, Screen):
 		if cur == self.configList[1]:
 			list = []
 			if cur[1].value and len(self.configList) == len(self["config"].list):
-				list = self.configList + self.appendList 
+				list = self.configList + self.appendList
 			elif not cur[1].value and len(self.configList) < len(self["config"].list):
 				list = self.configList
 			if len(list):
@@ -637,7 +637,7 @@ class FullBackupConfig(ConfigListScreen, Screen):
 					cmd += " %s" % "recovery"
 				self.session.openWithCallback(self.consoleClosed, BackupConsole, text, [cmd])
 
-	def consoleClosed(self, answer=None): 
+	def consoleClosed(self, answer=None):
 		self.changedWhere(config.plugins.fullbackup.where)
 
 	def backgroundMode(self, recovery=False):
@@ -671,7 +671,7 @@ class BackupConsole(Console):
 	def __init__(self, session, title="Console", cmdlist=None, finishedCallback=None, closeOnSuccess=False, dir=None):
 		Console.__init__(self, session, title, cmdlist, finishedCallback, closeOnSuccess)
 		self.skinName = "Console"
-		self["BackupActions"] = ActionMap(["InfobarMenuActions"], 
+		self["BackupActions"] = ActionMap(["InfobarMenuActions"],
 		{
 			"mainMenu": self.stopRunBackup,
 		}, -2)
@@ -742,7 +742,7 @@ class FlashImageConfig(Screen):
 			<widget source="curdir" render="Label" position="5,50" size="550,20"  font="Regular;17" halign="left" valign="center" backgroundColor="background" transparent="1" noWrap="1" />
 			<widget name="filelist" position="5,80" size="550,345" scrollbarMode="showOnDemand" />
 		</screen>"""
-	
+
 	def __init__(self, session, curdir, matchingPattern=None):
 		Screen.__init__(self, session)
 
@@ -863,7 +863,7 @@ class FlashImageConfig(Screen):
 	def confirmedWarning(self, result):
 		if result:
 			self.founds = False
-			self.pausetimer = eTimer() 
+			self.pausetimer = eTimer()
 			self.pausetimer.callback.append(self.showparameterlist)
 			self.pausetimer.start(500, True)
 
@@ -1175,11 +1175,11 @@ class SearchOMBfile(Screen):
 			<widget source="curdir" render="Label" position="5,50" size="550,20"  font="Regular;17" halign="left" valign="center" backgroundColor="background" transparent="1" noWrap="1" />
 			<widget name="filelist" position="5,80" size="550,345" scrollbarMode="showOnDemand" />
 		</screen>"""
-	
+
 	def __init__(self, session, curdir, matchingPattern=None, found_dir=''):
 		Screen.__init__(self, session)
 
-		self["Title"].setText(_("Select backup for add to OpenMultiboot")) 
+		self["Title"].setText(_("Select backup for add to OpenMultiboot"))
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText("")
 		self["key_yellow"] = StaticText("")
@@ -1327,7 +1327,7 @@ class SearchOMBfile(Screen):
 	def CallbackAddOMB(self, ret):
 		if ret:
 			self.msg = self.session.open(MessageBox, _("Please wait!\nGreating zip archive..."), MessageBox.TYPE_INFO, enable_input=False)
-			self.pauseTimer = eTimer() 
+			self.pauseTimer = eTimer()
 			self.pauseTimer.callback.append(self.runzipOMB)
 			self.pauseTimer.start(500, True)
 
@@ -1354,7 +1354,7 @@ class SearchOMBfile(Screen):
 		if self.msg:
 			self.msg.close()
 		self.txt = txt
-		self.pause_Timer = eTimer() 
+		self.pause_Timer = eTimer()
 		self.pause_Timer.callback.append(self.postzipOMB)
 		self.pause_Timer.start(200, True)
 
@@ -1399,9 +1399,9 @@ def doneConfiguring(session, retval):
 class AutoStartTimer:
 	def __init__(self, session):
 		self.session = session
-		self.timer = eTimer() 
+		self.timer = eTimer()
 		self.timer.callback.append(self.onTimer)
-		self.pause_timer = eTimer() 
+		self.pause_timer = eTimer()
 		self.pause_timer.callback.append(self.setPauseStart)
 		self.pause_timer.startLongTimer(60)
 		self.waitGreatetimer = eTimer()
@@ -1569,7 +1569,7 @@ class AutoStartTimer:
 			if wakeup_day == -1:
 				return -1
 			if wake_up < now:
-				wake_up += 86400 * wakeup_day 
+				wake_up += 86400 * wakeup_day
 			else:
 				if not config.plugins.extra_fullbackup.day_backup[cur_day].value:
 					wake_up += 86400 * wakeup_day
@@ -1646,23 +1646,23 @@ class DaysProfile(ConfigListScreen, Screen):
 	skin = """
 			<screen position="center,center" size="400,230" title="Days Profile" >
 			<widget name="config" position="0,0" size="400,180" scrollbarMode="showOnDemand" />
-			<widget name="key_red" position="0,190" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1"/> 
-			<widget name="key_green" position="140,190" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1"/> 
+			<widget name="key_red" position="0,190" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1"/>
+			<widget name="key_green" position="140,190" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1"/>
 			<ePixmap name="red"    position="0,190"   zPosition="2" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />
 			<ePixmap name="green"  position="140,190" zPosition="2" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />
 		</screen>"""
-		
+
 	def __init__(self, session, args=0):
 		self.session = session
 		Screen.__init__(self, session)
-		
+
 		self.list = []
 
 		for i in range(7):
 			self.list.append(getConfigListEntry(weekdays[i], config.plugins.extra_fullbackup.day_backup[i]))
 
 		ConfigListScreen.__init__(self, self.list)
-		
+
 		self["key_red"] = Button(_("Cancel"))
 		self["key_green"] = Button(_("Save"))
 		self["setupActions"] = ActionMap(["SetupActions", "ColorActions"],
@@ -1850,7 +1850,7 @@ def Plugins(**kwargs):
 		),
 		PluginDescriptor(
 			name="MultiBoot switcher",
-			where=PluginDescriptor.WHERE_MENU, 
+			where=PluginDescriptor.WHERE_MENU,
 			fnc=menu
 		),
 	]

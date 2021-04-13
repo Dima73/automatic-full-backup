@@ -88,7 +88,7 @@ def find_kernel_device_udevadm(kernelpartition):
 	try:
 		for partition in os.listdir('/sys/block/mmcblk0'):
 			if partition.startswith('mmcblk0p'):
-				
+
 				if kernelpartition == name:
 					return '/dev/' + partition
 		return ''
