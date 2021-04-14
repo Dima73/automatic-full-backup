@@ -10,8 +10,9 @@ import os
 from enigma import eTimer
 from plugin import MODEL_NAME, _
 
+
 def getextdevices(ext):
-	cmd ='blkid -t TYPE=%s -o device' % ext
+	cmd = 'blkid -t TYPE=%s -o device' % ext
 	try:
 		extdevices = os.popen(cmd).read().replace('\n', ',').rstrip(",")
 	except:
@@ -19,6 +20,7 @@ def getextdevices(ext):
 	if extdevices:
 		extdevices = [x.strip() for x in extdevices.split(",")]
 	return extdevices
+
 
 class MultiBootSwitcher(ConfigListScreen, Screen):
 	skin = """
@@ -117,10 +119,11 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			idx = 0
 			blv = ''
 			for x in self.bootloaderList:
-				if idx: blv += ', '
+				if idx:
+					blv += ', '
 				blv += x
 				idx += 1
-			message = (_("Your box needs Bootloaderversion(s)\n\n%s\n\nto make compatible with Bootoptions!") % blv,) 
+			message = (_("Your box needs Bootloaderversion(s)\n\n%s\n\nto make compatible with Bootoptions!") % blv,)
 		self.session.open(MessageBox, message[self.option], MessageBox.TYPE_INFO)
 
 	def rename(self):
@@ -133,14 +136,14 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 
 	def renameCB(self, newname):
 		if newname and newname != 'bootname' and newname != self.oldname:
-			if not os.path.exists('/boot/%s' %newname) and os.path.isfile('/boot/%s' %self.oldname):
-				ret = os.system("mv -fn '/boot/%s' '/boot/%s'" %(self.oldname,newname))
+			if not os.path.exists('/boot/%s' % newname) and os.path.isfile('/boot/%s' % self.oldname):
+				ret = os.system("mv -fn '/boot/%s' '/boot/%s'" % (self.oldname, newname))
 				if ret:
 					self.session.open(MessageBox, _('Rename failed!'), MessageBox.TYPE_ERROR)
 				else:
 					bootname = self.readlineFile('/boot/bootname').split('=')
 					if len(bootname) == 2 and bootname[1] == self.oldname:
-						self.writeFile('/boot/bootname', '%s=%s' %(bootname[0],newname))
+						self.writeFile('/boot/bootname', '%s=%s' % (bootname[0], newname))
 						self.getCurrent()
 						return
 					elif self.bootname == self.oldname:
@@ -163,7 +166,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			f.close()
 			return True
 		except IOError:
-			print "[MultiBoot switcher] write error file: %s" % FILE 
+			print "[MultiBoot switcher] write error file: %s" % FILE
 			return False
 
 	def readlineFile(self, FILE):
@@ -174,7 +177,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 				data = f.readline().replace('\n', '')
 				f.close()
 			except:
-				print "[MultiBoot switcher] error read file: %s" % FILE 
+				print "[MultiBoot switcher] error read file: %s" % FILE
 		return data
 
 	def getCurrent(self):
@@ -228,7 +231,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 					idx += 1
 		#verify bootname
 		if bootname in self.list:
-			line = self.readlineFile('/boot/%s' %bootname)
+			line = self.readlineFile('/boot/%s' % bootname)
 			if line[22:23] != boot[22:23]:
 				self.selection = None
 		else:
@@ -237,7 +240,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 		if self.selection is None:
 			idx = 0
 			for x in self.list:
-				line = self.readlineFile('/boot/%s' %x)
+				line = self.readlineFile('/boot/%s' % x)
 				if line[22:23] == boot[22:23]:
 					bootname = x
 					self.selection = idx
@@ -251,7 +254,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 
 		#read current boxmode
 		try:
-			bootmode = boot.split('rootwait',1)[1].split('boxmode',1)[1].split("'",1)[0].split('=',1)[1].replace(' ','')
+			bootmode = boot.split('rootwait', 1)[1].split('boxmode', 1)[1].split("'", 1)[0].split('=', 1)[1].replace(' ', '')
 		except IndexError:
 			bootmode = ""
 		#find and verify current boxmode
@@ -279,7 +282,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 
 		self.startup()
 		self.startup_option()
-		self["description"].setText(_("Current bootsettings: %s (%s)%s") %(bootname, image, bootoption))
+		self["description"].setText(_("Current bootsettings: %s (%s)%s") % (bootname, image, bootoption))
 
 	def layoutFinished(self):
 		self.setTitle(self.setup_title)
@@ -367,10 +370,10 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			if 'boxmode' in ENTRY:
 				cmdx = 8
 				cmd4 = "rootwait"
-				bootmode = temp[7].split("%s_4.boxmode=" % MODEL_NAME)[1].replace("'",'')
+				bootmode = temp[7].split("%s_4.boxmode=" % MODEL_NAME)[1].replace("'", '')
 			setmode = self.optionsList[self.option][0].split('=')[1]
 			#verify entries
-			if cmdx != len(temp) or 'boot' != temp[0] or 'rw' != temp[5] or cmd4 != temp[6] or kernel != root-kernel-1 or "'" != ENTRY[-1:]:
+			if cmdx != len(temp) or 'boot' != temp[0] or 'rw' != temp[5] or cmd4 != temp[6] or kernel != root - kernel - 1 or "'" != ENTRY[-1:]:
 				print "[MultiBoot switcher] Command line in '/boot/STARTUP' - problem with not matching entries!"
 				ret = True
 			#verify length
@@ -423,7 +426,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 		elif self.option_enabled:
 			for x in self.optionsList:
 				if (x[0] + "'" in boot or x[0] + " " in boot) and x[0] != self.optionsList[self.option][0]:
-					newboot = boot.replace(x[0],self.optionsList[self.option][0])
+					newboot = boot.replace(x[0], self.optionsList[self.option][0])
 					if self.optionsList[self.option][0] == "boxmode=1":
 						newboot = newboot.replace("520M@248M", "440M@328M")
 						newboot = newboot.replace("200M@768M", "192M@768M")
@@ -452,7 +455,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			if failboot:
 				self.writeFile('/boot/bootname', 'STARTUP_1=STARTUP_1')
 			else:
-				self.writeFile('/boot/bootname', '%s=%s' %('STARTUP_%s' % MODEL_NAME, boot[22:23], self.list[self.selection]))
+				self.writeFile('/boot/bootname', '%s=%s' % ('STARTUP_%s' % MODEL_NAME, boot[22:23], self.list[self.selection]))
 
 		message = _("Do you want to reboot now with selected image?")
 		if failboot:
@@ -461,20 +464,20 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 				if self.writeFile('/boot/STARTUP', "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait'"):
 					txt = _("Next boot will start from Image 1.")
 				else:
-					txt =_("Can not repair file %s") %("'/boot/STARTUP'") + "\n" + _("Caution, next boot is starts with these settings!") + "\n"
+					txt = _("Can not repair file %s") % ("'/boot/STARTUP'") + "\n" + _("Caution, next boot is starts with these settings!") + "\n"
 			else:
 				txt = _("Alternative Image 1 partition for boot repair not found.") + "\n" + _("Caution, next boot is starts with these settings!") + "\n"
-			message = _("Wrong Bootsettings detected!") + "\n\n%s\n\n%s\n" %(boot, txt) + _("Do you want to reboot now?")
+			message = _("Wrong Bootsettings detected!") + "\n\n%s\n\n%s\n" % (boot, txt) + _("Do you want to reboot now?")
 		elif writeoption:
 			if not self.writeFile('/boot/STARTUP', newboot):
-				txt = _("Can not write file %s") %("'/boot/STARTUP'") + "\n" + _("Caution, next boot is starts with these settings!") + "\n"
-				message = _("Write error!") + "\n\n%s\n\n%s\n" %(boot, txt) + _("Do you want to reboot now?")
+				txt = _("Can not write file %s") % ("'/boot/STARTUP'") + "\n" + _("Caution, next boot is starts with these settings!") + "\n"
+				message = _("Write error!") + "\n\n%s\n\n%s\n" % (boot, txt) + _("Do you want to reboot now?")
 
 		if failboot or writeoption:
 			boot = self.readlineFile('/boot/STARTUP')
 			if self.checkBootEntry(boot):
-				txt = _("Error in file %s") %("'/boot/STARTUP'") + "\n" + _("Caution, next boot is starts with these settings!") + "\n"
-				message = _("Command line error!") + "\n\n%s\n\n%s\n" %(boot, txt) + _("Do you want to reboot now?")
+				txt = _("Error in file %s") % ("'/boot/STARTUP'") + "\n" + _("Caution, next boot is starts with these settings!") + "\n"
+				message = _("Command line error!") + "\n\n%s\n\n%s\n" % (boot, txt) + _("Do you want to reboot now?")
 
 		self.session.openWithCallback(self.restartBOX, MessageBox, message, MessageBox.TYPE_YESNO, default=False)
 
@@ -528,7 +531,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 		for name in os.listdir(PATH):
 			if os.path.isfile(os.path.join(PATH, name)):
 				try:
-					cmdline = self.read_startup("/boot/" + name).split("=",3)[3].split(" ",1)[0]
+					cmdline = self.read_startup("/boot/" + name).split("=", 3)[3].split(" ", 1)[0]
 				except IndexError:
 					continue
 				if cmdline in getextdevices("ext4") and not name == "STARTUP":

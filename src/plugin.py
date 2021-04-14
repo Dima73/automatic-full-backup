@@ -39,11 +39,13 @@ gettext.bindtextdomain("enigma2", resolveFilename(SCOPE_LANGUAGE))
 gettext.textdomain("enigma2")
 gettext.bindtextdomain("FullBackup", "%s%s" % (resolveFilename(SCOPE_PLUGINS), "Extensions/FullBackup/locale/"))
 
+
 def _(txt):
 	t = gettext.dgettext("FullBackup", txt)
 	if t == txt:
 		t = gettext.gettext(txt)
 	return t
+
 
 PLUGIN_VERSION = _(" ver. ") + "6.9"
 
@@ -95,37 +97,37 @@ elif os.path.exists("/proc/stb/info/hwmodel") and not os.path.exists("/proc/stb/
 		pass
 
 config.plugins.fullbackup = ConfigSubsection()
-config.plugins.fullbackup.wakeup = ConfigClock(default = ((3*60) + 0) * 60) # 3:00
-config.plugins.fullbackup.enabled = ConfigEnableDisable(default = False)
-config.plugins.fullbackup.day_profile = ConfigSelection(choices = [("1", _("Press OK"))], default = "1")
-config.plugins.fullbackup.deepstandby = ConfigSelection(default = "0", choices = [
+config.plugins.fullbackup.wakeup = ConfigClock(default=((3 * 60) + 0) * 60) # 3:00
+config.plugins.fullbackup.enabled = ConfigEnableDisable(default=False)
+config.plugins.fullbackup.day_profile = ConfigSelection(choices=[("1", _("Press OK"))], default="1")
+config.plugins.fullbackup.deepstandby = ConfigSelection(default="0", choices=[
 		("0", _("disabled")),
 		("1", _("wake up for backup")),
 		("2", _("wake up and shutdown after backup")),
 		])
-config.plugins.fullbackup.after_create = ConfigYesNo(default = False)
-config.plugins.fullbackup.message = ConfigSelection(default = "0", choices = [
+config.plugins.fullbackup.after_create = ConfigYesNo(default=False)
+config.plugins.fullbackup.message = ConfigSelection(default="0", choices=[
 		("0", _("no")),
 		("1", _("type info")),
 		("2", _("type yes/no")),
 		])
 config.plugins.fullbackup.where = ConfigText(default="none", fixed_size=False)
-config.plugins.fullbackup.autoscan = ConfigYesNo(default = True)
+config.plugins.fullbackup.autoscan = ConfigYesNo(default=True)
 config.plugins.fullbackup.autoscan_nelp = ConfigNothing()
-config.plugins.fullbackup.autoclean = ConfigSelection(default = "0", choices = [
-		( "0",_("cleanup disabled")),
-		( "2",_("older than 2 days")),
-		( "3",_("older than 3 days")),
-		( "7", _("older than 1 week")),
-		("14",_("older than 2 weeks")),
-		("21",_("older than 3 weeks")),
-		("28",_("older than 4 weeks")),
-		("91",_("older than 3 months")),
+config.plugins.fullbackup.autoclean = ConfigSelection(default="0", choices=[
+		("0", _("cleanup disabled")),
+		("2", _("older than 2 days")),
+		("3", _("older than 3 days")),
+		("7", _("older than 1 week")),
+		("14", _("older than 2 weeks")),
+		("21", _("older than 3 weeks")),
+		("28", _("older than 4 weeks")),
+		("91", _("older than 3 months")),
 		])
 config.plugins.extra_fullbackup = ConfigSubsection()
 config.plugins.extra_fullbackup.day_backup = ConfigSubDict()
 for i in range(7):
-	config.plugins.extra_fullbackup.day_backup[i] = ConfigEnableDisable(default = True)
+	config.plugins.extra_fullbackup.day_backup[i] = ConfigEnableDisable(default=True)
 
 weekdays = [
 	_("Monday"),
@@ -137,8 +139,8 @@ weekdays = [
 	_("Sunday"),
 	]
 
-config.plugins.fullbackup.multiboot_switcher_standbymenu = ConfigYesNo(default = False)
-config.plugins.fullbackup.run_multbboot_switcher = ConfigSelection(choices = [("1", _("Press OK"))], default = "1")
+config.plugins.fullbackup.multiboot_switcher_standbymenu = ConfigYesNo(default=False)
+config.plugins.fullbackup.run_multbboot_switcher = ConfigSelection(choices=[("1", _("Press OK"))], default="1")
 
 autoStartTimer = None
 _session = None
@@ -168,34 +170,38 @@ if not os.path.exists(ofgwrite_bin):
 			os.chmod(SH4, 0755)
 			ofgwrite_bin = SH4
 
+
 def Freespace(dev):
 	try:
 		statdev = os.statvfs(dev)
 		space = (statdev.f_bavail * statdev.f_frsize) / 1024
-		print "[FullBackup] Free space on %s = %i kilobytes" %(dev, space)
+		print "[FullBackup] Free space on %s = %i kilobytes" % (dev, space)
 		return space
 	except:
 		return 0
 
+
 def check_hdd(dir=""):
 	if not os.path.exists(dir):
 		if Standby.inStandby is None:
-			_session and _session.open(MessageBox, _("AFB\nNot found mount device for create full backup!"), type = MessageBox.TYPE_ERROR)
+			_session and _session.open(MessageBox, _("AFB\nNot found mount device for create full backup!"), type=MessageBox.TYPE_ERROR)
 		return False
 	if emmc_multiboot:
 		if Freespace(dir) < 1500000:
 			if Standby.inStandby is None:
-				_session and _session.open(MessageBox, _("AFB\nNot enough free space on device!\nYou need at least 1500Mb free space!"), type = MessageBox.TYPE_ERROR)
+				_session and _session.open(MessageBox, _("AFB\nNot enough free space on device!\nYou need at least 1500Mb free space!"), type=MessageBox.TYPE_ERROR)
 			return False
 	else:
 		if Freespace(dir) < 300000:
 			if Standby.inStandby is None:
-				_session and _session.open(MessageBox, _("AFB\nNot enough free space on device!\nYou need at least 300Mb free space!"), type = MessageBox.TYPE_ERROR)
+				_session and _session.open(MessageBox, _("AFB\nNot enough free space on device!\nYou need at least 300Mb free space!"), type=MessageBox.TYPE_ERROR)
 			return False
 	return True
 
+
 emmc_multiboot = MODEL_NAME in ("hd51", "vs1500", "h7")
 emmc_multiboot1 = MODEL_NAME in ("gbquad4k", "gbue4k")
+
 
 def runBlkid():
 	list = []
@@ -245,9 +251,11 @@ def runBlkid():
 			_session.openWithCallback(installUtilblkidCallback, MessageBox, _("Install util-linux-blkid?"), MessageBox.TYPE_YESNO)
 	return list
 
+
 def installUtilblkidCallback(answer):
 		if answer:
 			os.system("opkg update && opkg install util-linux-blkid && opkg install util-linux-sfdisk")
+
 
 def backupCommand():
 	try:
@@ -284,6 +292,7 @@ def backupCommand():
 	cmd += " " + config.plugins.fullbackup.where.value
 	return cmd
 
+
 def runBackup():
 	destination = config.plugins.fullbackup.where.value
 	if destination == 'none':
@@ -306,6 +315,7 @@ def runBackup():
 				except:
 					pass
 
+
 def runCleanup():
 	olderthen = int(config.plugins.fullbackup.autoclean.value)
 	destination = config.plugins.fullbackup.where.value
@@ -313,10 +323,10 @@ def runCleanup():
 		return
 	if olderthen and destination:
 		try:
-			backupList = os.listdir('%s/automatic_fullbackup'%(destination))
+			backupList = os.listdir('%s/automatic_fullbackup' % (destination))
 			backupList.sort()
 		except:
-			backupList = [ ]
+			backupList = []
 		if len(backupList) > 0:
 			import re
 			pattern = re.compile('^(\d{8}_\d{4})$', re.M)	# '%Y%m%d_%H%M'
@@ -325,11 +335,12 @@ def runCleanup():
 				s = pattern.search(backup)
 				if not s is None:
 					date = time.mktime(time.strptime(s.group(1), '%Y%m%d_%H%M'))
-					if int(date) > olderthen: continue
-					os.system('rm -rf %s/automatic_fullbackup/%s'%(destination,backup))
+					if int(date) > olderthen:
+						continue
+					os.system('rm -rf %s/automatic_fullbackup/%s' % (destination, backup))
 
 
-class FullBackupConfig(ConfigListScreen,Screen):
+class FullBackupConfig(ConfigListScreen, Screen):
 	skin = """
 <screen position="center,center" size="640,455" title="FullBackup Configuration" >
 	<ePixmap name="red"    position="0,0"   zPosition="2" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />
@@ -337,8 +348,8 @@ class FullBackupConfig(ConfigListScreen,Screen):
 	<ePixmap name="yellow" position="320,0" zPosition="2" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on" />
 	<ePixmap name="blue" position="480,0" zPosition="2" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on" />
 
-	<widget name="key_red" position="0,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" /> 
-	<widget name="key_green" position="160,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" /> 
+	<widget name="key_red" position="0,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" />
+	<widget name="key_green" position="160,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" />
 	<widget name="key_yellow" position="320,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" />
 	<widget name="key_blue" position="480,0" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1" shadowColor="background" shadowOffset="-2,-2" />
 
@@ -352,7 +363,7 @@ class FullBackupConfig(ConfigListScreen,Screen):
 	<widget name="statusbar" position="10,430" size="550,20" font="Regular;18" />
 </screen>"""
 
-	def __init__(self, session, args = 0):
+	def __init__(self, session, args=0):
 		self.session = session
 		self.setup_title = _("FullBackup Configuration")
 		Screen.__init__(self, session)
@@ -363,18 +374,18 @@ class FullBackupConfig(ConfigListScreen,Screen):
 		self["ButtonMenu"].hide()
 		hddchoises = [('none', 'None')]
 		for p in harddiskmanager.getMountedPartitions():
-			if os.path.exists(p.mountpoint) and os.access(p.mountpoint, os.F_OK|os.R_OK):
+			if os.path.exists(p.mountpoint) and os.access(p.mountpoint, os.F_OK | os.R_OK):
 				if p.mountpoint != '/':
 					d = os.path.normpath(p.mountpoint)
 					mountpoint = p.mountpoint
 					if mountpoint.endswith('/'):
 						mountpoint = mountpoint[:-1]
-					hddchoises.append((d , mountpoint))
+					hddchoises.append((d, mountpoint))
 		if (current_path, current_path) in hddchoises:
 			default_path = current_path
 		else:
 			default_path = 'none'
-		config.plugins.fullbackup.add_to_where = NoSave(ConfigSelection(default = default_path, choices = hddchoises))
+		config.plugins.fullbackup.add_to_where = NoSave(ConfigSelection(default=default_path, choices=hddchoises))
 		cfg = config.plugins.fullbackup
 		self.appendList = [
 			getConfigListEntry(_("Automatic start time"), cfg.wakeup),
@@ -396,7 +407,7 @@ class FullBackupConfig(ConfigListScreen,Screen):
 		if emmc_multiboot:
 			list.append(getConfigListEntry(_("Show multiBoot switcher in menu shutdown"), cfg.multiboot_switcher_standbymenu))
 			list.append(getConfigListEntry(_("Open multiBoot switcher"), cfg.run_multbboot_switcher))
-		ConfigListScreen.__init__(self, list, session=session, on_change = self.changedEntry)
+		ConfigListScreen.__init__(self, list, session=session, on_change=self.changedEntry)
 		self["key_red"] = Button(_("Cancel"))
 		self["key_green"] = Button(_("Save"))
 		self["key_yellow"] = Button(_("Manual"))
@@ -433,9 +444,9 @@ class FullBackupConfig(ConfigListScreen,Screen):
 	def onEntryChanged(self):
 		cur = self["config"].getCurrent()
 		if cur == self.configList[1]:
-			list = [ ]
+			list = []
 			if cur[1].value and len(self.configList) == len(self["config"].list):
-				list = self.configList + self.appendList 
+				list = self.configList + self.appendList
 			elif not cur[1].value and len(self.configList) < len(self["config"].list):
 				list = self.configList
 			if len(list):
@@ -546,7 +557,8 @@ class FullBackupConfig(ConfigListScreen,Screen):
 	def keyOk(self):
 		ConfigListScreen.keyOK(self)
 		sel = self["config"].getCurrent() and self["config"].getCurrent()[1]
-		if sel is None:return
+		if sel is None:
+			return
 		if sel == config.plugins.fullbackup.day_profile:
 			self.session.open(DaysProfile)
 		elif sel == config.plugins.fullbackup.run_multbboot_switcher:
@@ -562,7 +574,7 @@ class FullBackupConfig(ConfigListScreen,Screen):
 		if not MODEL_NAME:
 			return
 		files = "^.*\.(zip|bin)"
-		if MODEL_NAME == "hd51" or MODEL_NAME == "solo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k"  or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k" or MODEL_NAME == "duo4kse" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "dm900" or MODEL_NAME == "dm920" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbue4k":
+		if MODEL_NAME == "hd51" or MODEL_NAME == "solo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k" or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k" or MODEL_NAME == "duo4kse" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "dm900" or MODEL_NAME == "dm920" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbue4k":
 			files = "^.*\.(zip|bz2|bin)"
 		elif BOX_NAME == "vu":
 			if MODEL_NAME == "solo2" or MODEL_NAME == "duo2" or MODEL_NAME == "solose" or MODEL_NAME == "zero" or MODEL_NAME == "fusionhd" or MODEL_NAME == "fusionhdse" or MODEL_NAME == "purehd":
@@ -580,12 +592,12 @@ class FullBackupConfig(ConfigListScreen,Screen):
 		config.plugins.fullbackup.where.save()
 		self.saveAll()
 		configfile.save()
-		self.close(True,self.session)
+		self.close(True, self.session)
 
 	def cancel(self):
 		for x in self["config"].list:
 			x[1].cancel()
-		self.close(False,self.session)
+		self.close(False, self.session)
 
 	def showOutput(self):
 		self["status"].setText(self.data)
@@ -608,7 +620,7 @@ class FullBackupConfig(ConfigListScreen,Screen):
 				(_("Background mode") + _(" as recovery"), "background_recovery"),
 				(_("Console mode") + _(" as recovery"), "console_recovery"),
 			]
-		dlg = self.session.openWithCallback(self.CallbackMode, ChoiceBox, title= _("Select the option to create a backup:"), list = list)
+		dlg = self.session.openWithCallback(self.CallbackMode, ChoiceBox, title=_("Select the option to create a backup:"), list=list)
 		dlg.setTitle(_("Create backup"))
 
 	def CallbackMode(self, ret):
@@ -625,7 +637,7 @@ class FullBackupConfig(ConfigListScreen,Screen):
 					cmd += " %s" % "recovery"
 				self.session.openWithCallback(self.consoleClosed, BackupConsole, text, [cmd])
 
-	def consoleClosed(self, answer=None): 
+	def consoleClosed(self, answer=None):
 		self.changedWhere(config.plugins.fullbackup.where)
 
 	def backgroundMode(self, recovery=False):
@@ -654,11 +666,12 @@ class FullBackupConfig(ConfigListScreen,Screen):
 		self.data += str
 		self.showOutput()
 
+
 class BackupConsole(Console):
-	def __init__(self, session, title = "Console", cmdlist = None, finishedCallback = None, closeOnSuccess = False, dir=None):
+	def __init__(self, session, title="Console", cmdlist=None, finishedCallback=None, closeOnSuccess=False, dir=None):
 		Console.__init__(self, session, title, cmdlist, finishedCallback, closeOnSuccess)
 		self.skinName = "Console"
-		self["BackupActions"] = ActionMap(["InfobarMenuActions"], 
+		self["BackupActions"] = ActionMap(["InfobarMenuActions"],
 		{
 			"mainMenu": self.stopRunBackup,
 		}, -2)
@@ -689,6 +702,7 @@ class BackupConsole(Console):
 	def extendedClosed(self):
 		text = _("Select action:")
 		menu = [(_("Exit"), "exit"), (_("Exit and eject device"), "umount")]
+
 		def extraAction(choice):
 			if choice:
 				if choice[1] == "exit":
@@ -701,7 +715,7 @@ class BackupConsole(Console):
 						txt = _("The device was successfully unmounted!")
 					else:
 						txt = _("Error unmounting devices!")
-					AddPopup(txt, type = MessageBox.TYPE_INFO, timeout = 5, id = "InfoUmountDevice")
+					AddPopup(txt, type=MessageBox.TYPE_INFO, timeout=5, id="InfoUmountDevice")
 					self.close()
 					self.container.appClosed.remove(self.runFinished)
 					self.container.dataAvail.remove(self.dataAvail)
@@ -709,12 +723,13 @@ class BackupConsole(Console):
 
 	def stopRunBackup(self):
 		if (self.run != len(self.cmdlist)):
-			self.session.openWithCallback(self.stopRunBackupAnswer, MessageBox,_("Do you really want to stop the creation of backup?"), MessageBox.TYPE_YESNO)
+			self.session.openWithCallback(self.stopRunBackupAnswer, MessageBox, _("Do you really want to stop the creation of backup?"), MessageBox.TYPE_YESNO)
 
 	def stopRunBackupAnswer(self, answer):
 		if answer:
 			self.container.sendCtrlC()
 			self.stop_run = True
+
 
 class FlashImageConfig(Screen):
 	skin = """<screen name="FlashImageConfig" position="center,center" size="560,440" title=" " >
@@ -727,7 +742,7 @@ class FlashImageConfig(Screen):
 			<widget source="curdir" render="Label" position="5,50" size="550,20"  font="Regular;17" halign="left" valign="center" backgroundColor="background" transparent="1" noWrap="1" />
 			<widget name="filelist" position="5,80" size="550,345" scrollbarMode="showOnDemand" />
 		</screen>"""
-	
+
 	def __init__(self, session, curdir, matchingPattern=None):
 		Screen.__init__(self, session)
 
@@ -735,7 +750,7 @@ class FlashImageConfig(Screen):
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText("")
 		self["key_yellow"] = StaticText("")
-		self["curdir"] = StaticText(_("current:  %s")%(curdir or ''))
+		self["curdir"] = StaticText(_("current:  %s") % (curdir or ''))
 		self.founds = False
 		self.filelist = FileList(curdir, matchingPattern=matchingPattern, enableWrapAround=True)
 		self.filelist.onSelectionChanged.append(self.__selChanged)
@@ -829,7 +844,7 @@ class FlashImageConfig(Screen):
 	def __selChanged(self):
 		self["key_yellow"].setText("")
 		self["key_green"].setText("")
-		self["curdir"].setText(_("current:  %s")%(self.getCurrentSelected()))
+		self["curdir"].setText(_("current:  %s") % (self.getCurrentSelected()))
 		file_name = self.getCurrentSelected()
 		try:
 			if not self.filelist.canDescent() and file_name != '' and file_name != '/':
@@ -848,7 +863,7 @@ class FlashImageConfig(Screen):
 	def confirmedWarning(self, result):
 		if result:
 			self.founds = False
-			self.pausetimer = eTimer() 
+			self.pausetimer = eTimer()
 			self.pausetimer.callback.append(self.showparameterlist)
 			self.pausetimer.start(500, True)
 
@@ -871,7 +886,7 @@ class FlashImageConfig(Screen):
 				no_backup_files = []
 				text = _("Select parameter for start flash!\n")
 				text += _('For flashing your receiver files are needed:\n')
-				if os.path.exists("/proc/stb/info/hwmodel") and (MODEL_NAME.startswith('fusion')  or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k"):
+				if os.path.exists("/proc/stb/info/hwmodel") and (MODEL_NAME.startswith('fusion') or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k"):
 					if MODEL_NAME == "lunix3-4k" or MODEL_NAME == "lunix4k":
 						backup_files = [("rootfs.tar.bz2"), ("oe_kernel.bin")]
 						no_backup_files = ["kernel_cfe_auto.bin", "rootfs.bin", "root_cfe_auto.jffs2", "root_cfe_auto.bin"]
@@ -1120,7 +1135,7 @@ class FlashImageConfig(Screen):
 					return
 			except:
 				pass
-			self.session.openWithCallback(self.doClosed, Console, text,cmdlist = [message, cmd])
+			self.session.openWithCallback(self.doClosed, Console, text, cmdlist=[message, cmd])
 
 	def doClosed(self):
 		if (len(self.imbeddedMiltiBoot) > 1 and not self.stop_enigma) or self.dualboot:
@@ -1143,10 +1158,11 @@ class FlashImageConfig(Screen):
 			filename = self.filelist.getFilename()
 			if dirname and filename:
 				try:
-					os.system('unzip -o %s%s -d %s'%(dirname,filename,dirname))
+					os.system('unzip -o %s%s -d %s' % (dirname, filename, dirname))
 					self.filelist.refresh()
 				except:
 					pass
+
 
 class SearchOMBfile(Screen):
 	skin = """<screen name="SearchOMBfile" position="center,center" size="560,440" title=" " >
@@ -1159,15 +1175,15 @@ class SearchOMBfile(Screen):
 			<widget source="curdir" render="Label" position="5,50" size="550,20"  font="Regular;17" halign="left" valign="center" backgroundColor="background" transparent="1" noWrap="1" />
 			<widget name="filelist" position="5,80" size="550,345" scrollbarMode="showOnDemand" />
 		</screen>"""
-	
+
 	def __init__(self, session, curdir, matchingPattern=None, found_dir=''):
 		Screen.__init__(self, session)
 
-		self["Title"].setText(_("Select backup for add to OpenMultiboot")) 
+		self["Title"].setText(_("Select backup for add to OpenMultiboot"))
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText("")
 		self["key_yellow"] = StaticText("")
-		self["curdir"] = StaticText(_("current:  %s")%(curdir or ''))
+		self["curdir"] = StaticText(_("current:  %s") % (curdir or ''))
 		self.found_dir = found_dir
 		self.model = ''
 		self.txt = ''
@@ -1208,7 +1224,7 @@ class SearchOMBfile(Screen):
 	def __selChanged(self):
 		self["key_yellow"].setText("")
 		self["key_green"].setText("")
-		self["curdir"].setText(_("current:  %s")%(self.getCurrentSelected()))
+		self["curdir"].setText(_("current:  %s") % (self.getCurrentSelected()))
 		file_name = self.getCurrentSelected()
 		try:
 			if not self.filelist.canDescent() and file_name != '' and file_name != '/':
@@ -1310,8 +1326,8 @@ class SearchOMBfile(Screen):
 
 	def CallbackAddOMB(self, ret):
 		if ret:
-			self.msg = self.session.open(MessageBox, _("Please wait!\nGreating zip archive..."), MessageBox.TYPE_INFO, enable_input = False)
-			self.pauseTimer = eTimer() 
+			self.msg = self.session.open(MessageBox, _("Please wait!\nGreating zip archive..."), MessageBox.TYPE_INFO, enable_input=False)
+			self.pauseTimer = eTimer()
 			self.pauseTimer.callback.append(self.runzipOMB)
 			self.pauseTimer.start(500, True)
 
@@ -1319,7 +1335,7 @@ class SearchOMBfile(Screen):
 		dirname = self.filelist.getCurrentDirectory()
 		txt = _("Error creating zip archive!")
 		try:
-			tstamp =  time.strftime('%Y-%m-%d-%H:%M')
+			tstamp = time.strftime('%Y-%m-%d-%H:%M')
 			try:
 				name = about.getImageTypeString()
 				image_name = name.replace(' ', '').replace('\n', '').replace('\l', '').replace('\t', '')
@@ -1338,12 +1354,12 @@ class SearchOMBfile(Screen):
 		if self.msg:
 			self.msg.close()
 		self.txt = txt
-		self.pause_Timer = eTimer() 
+		self.pause_Timer = eTimer()
 		self.pause_Timer.callback.append(self.postzipOMB)
 		self.pause_Timer.start(200, True)
 
 	def postzipOMB(self):
-		self.session.open(MessageBox, self.txt, MessageBox.TYPE_INFO, timeout = 15)
+		self.session.open(MessageBox, self.txt, MessageBox.TYPE_INFO, timeout=15)
 
 	def keyRed(self):
 		self.close()
@@ -1360,13 +1376,15 @@ class SearchOMBfile(Screen):
 			filename = self.filelist.getFilename()
 			if dirname and filename:
 				try:
-					os.system('unzip -o %s%s -d %s'%(dirname,filename,dirname))
+					os.system('unzip -o %s%s -d %s' % (dirname, filename, dirname))
 					self.filelist.refresh()
 				except:
 					pass
 
+
 def main(session, **kwargs):
 	session.openWithCallback(doneConfiguring, FullBackupConfig)
+
 
 def doneConfiguring(session, retval):
 	"user has closed configuration, check new values...."
@@ -1376,12 +1394,14 @@ def doneConfiguring(session, retval):
 
 ##################################
 # Autostart section
+
+
 class AutoStartTimer:
 	def __init__(self, session):
 		self.session = session
-		self.timer = eTimer() 
+		self.timer = eTimer()
 		self.timer.callback.append(self.onTimer)
-		self.pause_timer = eTimer() 
+		self.pause_timer = eTimer()
 		self.pause_timer.callback.append(self.setPauseStart)
 		self.pause_timer.startLongTimer(60)
 		self.waitGreatetimer = eTimer()
@@ -1406,7 +1426,7 @@ class AutoStartTimer:
 					next_timer = False
 					if not recordings:
 						for timer in NavigationInstance.instance.RecordTimer.timer_list:
-							if 0 < timer.begin - time.time() <= 60*5:
+							if 0 < timer.begin - time.time() <= 60 * 5:
 								next_timer = True
 								continue
 					if not recordings and not next_timer:
@@ -1477,7 +1497,7 @@ class AutoStartTimer:
 							))
 							if begin >= end:
 								end += 86400
-							if 0 < begin - time.time() <= 60*5 or abs(time.time() - begin) < 900 and end > time.time():
+							if 0 < begin - time.time() <= 60 * 5 or abs(time.time() - begin) < 900 and end > time.time():
 								start_deepstandy = False
 								if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/EPGSaveLoadConfiguration.py"):
 									try:
@@ -1549,15 +1569,15 @@ class AutoStartTimer:
 			if wakeup_day == -1:
 				return -1
 			if wake_up < now:
-				wake_up += 86400*wakeup_day 
+				wake_up += 86400 * wakeup_day
 			else:
 				if not config.plugins.extra_fullbackup.day_backup[cur_day].value:
-					wake_up += 86400*wakeup_day
+					wake_up += 86400 * wakeup_day
 		else:
 			wake_up = -1
 		return wake_up
 
-	def update(self, atLeast = 0):
+	def update(self, atLeast=0):
 		self.timer.stop()
 		wake = self.getWakeTime()
 		now_t = time.time()
@@ -1569,10 +1589,10 @@ class AutoStartTimer:
 			if wakeup_day == -1:
 				return -1
 			if wake < now + atLeast:
-				wake += 86400*wakeup_day
+				wake += 86400 * wakeup_day
 			else:
 				if not config.plugins.extra_fullbackup.day_backup[cur_day].value:
-					wake += 86400*wakeup_day
+					wake += 86400 * wakeup_day
 			next = wake - now
 			self.timer.startLongTimer(next)
 		else:
@@ -1588,21 +1608,21 @@ class AutoStartTimer:
 			runCleanup()
 			if config.plugins.fullbackup.message.value == "1":
 				if Standby.inStandby is None:
-					self.session.open(MessageBox,_("Starting Automatic Full Backup!\nOptions control panel will not be available 5-7 minutes.\nPlease wait ..."), MessageBox.TYPE_INFO, timeout = 15)
+					self.session.open(MessageBox, _("Starting Automatic Full Backup!\nOptions control panel will not be available 5-7 minutes.\nPlease wait ..."), MessageBox.TYPE_INFO, timeout=15)
 				self.runTimer = eTimer()
 				self.runTimer.callback.append(self.startBackup)
-				self.runTimer.start(18000,True)
+				self.runTimer.start(18000, True)
 			elif config.plugins.fullbackup.message.value == "2":
 				if Standby.inStandby is None:
-					self.session.openWithCallback(self.confirmStartBackup, MessageBox,_("In the next few seconds to start Automatic Full Backup!\nOptions control panel will not be available 5-7 minutes.\nRun backup now?"), MessageBox.TYPE_YESNO, timeout = 15)
+					self.session.openWithCallback(self.confirmStartBackup, MessageBox, _("In the next few seconds to start Automatic Full Backup!\nOptions control panel will not be available 5-7 minutes.\nRun backup now?"), MessageBox.TYPE_YESNO, timeout=15)
 				else:
 					self.runTimer = eTimer()
 					self.runTimer.callback.append(self.startBackup)
-					self.runTimer.start(18000,True)
+					self.runTimer.start(18000, True)
 			else:
 				self.runTimer = eTimer()
 				self.runTimer.callback.append(self.startBackup)
-				self.runTimer.start(18000,True)
+				self.runTimer.start(18000, True)
 			atLeast = 60
 		self.update(atLeast)
 
@@ -1619,29 +1639,30 @@ class AutoStartTimer:
 		if answer:
 			self.runTimer = eTimer()
 			self.runTimer.callback.append(self.startBackup)
-			self.runTimer.start(3000,True)
+			self.runTimer.start(3000, True)
 
-class DaysProfile(ConfigListScreen,Screen):
+
+class DaysProfile(ConfigListScreen, Screen):
 	skin = """
 			<screen position="center,center" size="400,230" title="Days Profile" >
 			<widget name="config" position="0,0" size="400,180" scrollbarMode="showOnDemand" />
-			<widget name="key_red" position="0,190" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1"/> 
-			<widget name="key_green" position="140,190" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1"/> 
+			<widget name="key_red" position="0,190" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1"/>
+			<widget name="key_green" position="140,190" size="140,40" valign="center" halign="center" zPosition="4"  foregroundColor="white" font="Regular;18" transparent="1"/>
 			<ePixmap name="red"    position="0,190"   zPosition="2" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />
 			<ePixmap name="green"  position="140,190" zPosition="2" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />
 		</screen>"""
-		
-	def __init__(self, session, args = 0):
+
+	def __init__(self, session, args=0):
 		self.session = session
 		Screen.__init__(self, session)
-		
+
 		self.list = []
 
 		for i in range(7):
 			self.list.append(getConfigListEntry(weekdays[i], config.plugins.extra_fullbackup.day_backup[i]))
 
 		ConfigListScreen.__init__(self, self.list)
-		
+
 		self["key_red"] = Button(_("Cancel"))
 		self["key_green"] = Button(_("Save"))
 		self["setupActions"] = ActionMap(["SetupActions", "ColorActions"],
@@ -1665,7 +1686,7 @@ class DaysProfile(ConfigListScreen,Screen):
 						if not config.plugins.extra_fullbackup.day_backup[4].value:
 							if not config.plugins.extra_fullbackup.day_backup[5].value:
 								if not config.plugins.extra_fullbackup.day_backup[6].value:
-									self.session.open(MessageBox, _("You may not use this settings!\nAt least one day a week should be included!"), MessageBox.TYPE_INFO, timeout = 6)
+									self.session.open(MessageBox, _("You may not use this settings!\nAt least one day a week should be included!"), MessageBox.TYPE_INFO, timeout=6)
 									return
 		for x in self["config"].list:
 			x[1].save()
@@ -1675,6 +1696,7 @@ class DaysProfile(ConfigListScreen,Screen):
 		for x in self["config"].list:
 			x[1].cancel()
 		self.close()
+
 
 def WakeupDayOfWeek():
 	start_day = -1
@@ -1687,21 +1709,23 @@ def WakeupDayOfWeek():
 
 	if cur_day >= 0:
 		for i in range(1, 8):
-			if config.plugins.extra_fullbackup.day_backup[(cur_day+i)%7].value:
+			if config.plugins.extra_fullbackup.day_backup[(cur_day + i) % 7].value:
 				return i
 	return start_day
+
 
 class GreatingManualBackup(MessageBox):
 	def __init__(self, session, dir):
 		try:
-			if MODEL_NAME == "hd51" or MODEL_NAME == "vs1500"  or MODEL_NAME == "h7":
-				list = [ (_("Yes"), True), (_("Yes") + _(" as recovery"), "recovery"), (_("No"), False) ]
-				MessageBox.__init__(self, session, text = _("Do you really want to create a full backup in directory %s ?") % dir, list=list)
+			if MODEL_NAME == "hd51" or MODEL_NAME == "vs1500" or MODEL_NAME == "h7":
+				list = [(_("Yes"), True), (_("Yes") + _(" as recovery"), "recovery"), (_("No"), False)]
+				MessageBox.__init__(self, session, text=_("Do you really want to create a full backup in directory %s ?") % dir, list=list)
 			else:
 				MessageBox.__init__(self, session, _("Do you really want to create a full backup in directory %s ?") % dir, MessageBox.TYPE_YESNO)
 		except:
 			MessageBox.__init__(self, session, _("Do you really want to create a full backup in directory %s ?") % dir, MessageBox.TYPE_YESNO)
 		self.skinName = "MessageBox"
+
 
 def msgManualBackupClosed(ret, curdir=None):
 	if ret and curdir is not None:
@@ -1741,21 +1765,26 @@ def msgManualBackupClosed(ret, curdir=None):
 		except:
 			pass
 
+
 def menu(menuid, **kwargs):
 	if menuid == "shutdown" and config.plugins.fullbackup.multiboot_switcher_standbymenu.value:
 		return [(_("MultiBoot switcher"), openMultiBootSwitcher, "multiboot_switcher", 4)]
  	return []
 
+
 from MultiBootSwitcher import MultiBootSwitcher
+
 
 def openMultiBootSwitcher(session, **kwargs):
 	session.open(MultiBootSwitcher)
+
 
 def getNextWakeup():
 	if autoStartTimer:
 		if config.plugins.fullbackup.enabled.value and config.plugins.fullbackup.deepstandby.value != "0" and config.plugins.fullbackup.where.value != 'none':
 			return autoStartTimer.getStatus()
 	return -1
+
 
 def autostart(reason, session=None, **kwargs):
 	global autoStartTimer
@@ -1765,6 +1794,7 @@ def autostart(reason, session=None, **kwargs):
 			_session = session
 			if autoStartTimer is None:
 				autoStartTimer = AutoStartTimer(session)
+
 
 def filescan_open(list, session, **kwargs):
 	try:
@@ -1778,47 +1808,49 @@ def filescan_open(list, session, **kwargs):
 	except:
 		print "[FullBackup] read error current dir, sorry"
 
+
 def start_filescan(**kwargs):
 	from Components.Scanner import Scanner, ScanPath
 	if not config.plugins.fullbackup.autoscan.value:
 		return []
 	return \
 		Scanner(mimetypes=["application/x-full-backup"],
-			paths_to_scan =
-				[
-					ScanPath(path = "", with_subdirs = False),
+			paths_to_scan=[
+					ScanPath(path="", with_subdirs=False),
 				],
-			name = "Full Backup",
-			description = _("Create a full backup image"),
-			openfnc = filescan_open,
+			name="Full Backup",
+			description=_("Create a full backup image"),
+			openfnc=filescan_open,
 		)
 
+
 description = _("Full backup for all receivers") + PLUGIN_VERSION
+
 
 def Plugins(**kwargs):
 	return [
 		PluginDescriptor(
 			name="Automatic Full Backup",
-			description = description,
-			where = [PluginDescriptor.WHERE_AUTOSTART, PluginDescriptor.WHERE_SESSIONSTART],
-			fnc = autostart,
-			wakeupfnc = getNextWakeup
+			description=description,
+			where=[PluginDescriptor.WHERE_AUTOSTART, PluginDescriptor.WHERE_SESSIONSTART],
+			fnc=autostart,
+			wakeupfnc=getNextWakeup
 		),
 		PluginDescriptor(
 			name=_("Automatic Full Backup"),
-			description = description,
-			where = PluginDescriptor.WHERE_PLUGINMENU,
-			icon = 'plugin.png',
-			fnc = main
+			description=description,
+			where=PluginDescriptor.WHERE_PLUGINMENU,
+			icon='plugin.png',
+			fnc=main
 		),
 		PluginDescriptor(
 			name="Automatic Full Backup",
-			where = PluginDescriptor.WHERE_FILESCAN,
-			fnc = start_filescan
+			where=PluginDescriptor.WHERE_FILESCAN,
+			fnc=start_filescan
 		),
 		PluginDescriptor(
 			name="MultiBoot switcher",
-			where = PluginDescriptor.WHERE_MENU, 
-			fnc = menu
+			where=PluginDescriptor.WHERE_MENU,
+			fnc=menu
 		),
 	]
