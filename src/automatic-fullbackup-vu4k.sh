@@ -244,7 +244,7 @@ if [ $TYPE = "VU" ] || [ $TYPE = "QVIART" ] || [ $TYPE = "DREAMBOX" ] || [ $TYPE
 	echo "$MODEL-$IMAGEVERSION" > "$MAINDEST/imageversion"
 	if [ $TYPE = "QVIART" ] ; then
 		if [ -f /boot/initrd_run.bin ] ; then
-			cp /boot/initrd_run.bin "$MAINDEST/initrd_run.bin
+			cp /boot/initrd_run.bin $MAINDEST/initrd_run.bin
 		fi
 	fi
 	if [ $MODEL = "lunix3-4k" ] || [ $MODEL = "lunix4k" ] || [ $MODEL = "dm900" ] || [ $MODEL = "dm920" ] ; then
