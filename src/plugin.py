@@ -47,7 +47,7 @@ def _(txt):
 	return t
 
 
-PLUGIN_VERSION = _(" ver. ") + "6.9"
+PLUGIN_VERSION = _(" ver. ") + "7.0"
 
 BOX_NAME = "none"
 MODEL_NAME = "none"
@@ -402,9 +402,9 @@ class FullBackupConfig(ConfigListScreen, Screen):
 			list = self.configList + self.appendList
 		else:
 			list = self.configList
-		if emmc_multiboot:
-			list.append(getConfigListEntry(_("Show multiBoot switcher in menu shutdown"), cfg.multiboot_switcher_standbymenu))
-			list.append(getConfigListEntry(_("Open multiBoot switcher"), cfg.run_multbboot_switcher))
+		#if emmc_multiboot:
+		#	list.append(getConfigListEntry(_("Show multiBoot switcher in menu shutdown"), cfg.multiboot_switcher_standbymenu))
+		#	list.append(getConfigListEntry(_("Open multiBoot switcher"), cfg.run_multbboot_switcher))
 		ConfigListScreen.__init__(self, list, session=session, on_change=self.changedEntry)
 		self["key_red"] = Button(_("Cancel"))
 		self["key_green"] = Button(_("Save"))
@@ -1715,11 +1715,11 @@ def WakeupDayOfWeek():
 class GreatingManualBackup(MessageBox):
 	def __init__(self, session, dir):
 		try:
-			if MODEL_NAME == "hd51" or MODEL_NAME == "vs1500" or MODEL_NAME == "h7":
-				list = [(_("Yes"), True), (_("Yes") + _(" as recovery"), "recovery"), (_("No"), False)]
-				MessageBox.__init__(self, session, text=_("Do you really want to create a full backup in directory %s ?") % dir, list=list)
-			else:
-				MessageBox.__init__(self, session, _("Do you really want to create a full backup in directory %s ?") % dir, MessageBox.TYPE_YESNO)
+			#if MODEL_NAME == "hd51" or MODEL_NAME == "vs1500" or MODEL_NAME == "h7":
+			#	list = [(_("Yes"), True), (_("Yes") + _(" as recovery"), "recovery"), (_("No"), False)]
+			#	MessageBox.__init__(self, session, text=_("Do you really want to create a full backup in directory %s ?") % dir, list=list)
+			#else:
+			MessageBox.__init__(self, session, _("Do you really want to create a full backup in directory %s ?") % dir, MessageBox.TYPE_YESNO)
 		except:
 			MessageBox.__init__(self, session, _("Do you really want to create a full backup in directory %s ?") % dir, MessageBox.TYPE_YESNO)
 		self.skinName = "MessageBox"
@@ -1808,6 +1808,8 @@ def filescan_open(list, session, **kwargs):
 
 
 def start_filescan(**kwargs):
+	if os.path.exists("/proc/hisi"):
+		return []
 	from Components.Scanner import Scanner, ScanPath
 	if not config.plugins.fullbackup.autoscan.value:
 		return []
@@ -1826,6 +1828,8 @@ description = _("Full backup for all receivers") + PLUGIN_VERSION
 
 
 def Plugins(**kwargs):
+	if os.path.exists("/proc/hisi"):
+		return []
 	return [
 		PluginDescriptor(
 			name="Automatic Full Backup",
@@ -1846,9 +1850,9 @@ def Plugins(**kwargs):
 			where=PluginDescriptor.WHERE_FILESCAN,
 			fnc=start_filescan
 		),
-		PluginDescriptor(
-			name="MultiBoot switcher",
-			where=PluginDescriptor.WHERE_MENU,
-			fnc=menu
-		),
+		#PluginDescriptor(
+		#	name="MultiBoot switcher",
+		#	where=PluginDescriptor.WHERE_MENU,
+		#	fnc=menu
+		#),
 	]
