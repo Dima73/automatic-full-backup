@@ -19,13 +19,14 @@ RESIZE2FS=/sbin/resize2fs
 
 getaddr() {
 	python - $1 $2<<-"EOF"
+		from __future__ import print_function
 		from sys import argv
 		filename = argv[1]
 		address = int(argv[2])
 		fh = open(filename,'rb')
 		header = fh.read(2048)
 		fh.close()
-		print "%d" % ( (ord(header[address+2]) <<16 ) | (ord(header[address+1]) << 8) |  ord(header[address]) )
+		print("%d" % ( (ord(header[address+2]) <<16 ) | (ord(header[address+1]) << 8) |  ord(header[address]) ))
 	EOF
 }
 

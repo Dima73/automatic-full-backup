@@ -1,3 +1,4 @@
+from __future__ import print_function
 from Screens.Screen import Screen
 from Screens.Standby import TryQuitMainloop
 from Screens.MessageBox import MessageBox
@@ -166,7 +167,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			f.close()
 			return True
 		except IOError:
-			print "[MultiBoot switcher] write error file: %s" % FILE
+			print("[MultiBoot switcher] write error file: %s" % FILE)
 			return False
 
 	def readlineFile(self, FILE):
@@ -177,7 +178,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 				data = f.readline().replace('\n', '')
 				f.close()
 			except:
-				print "[MultiBoot switcher] error read file: %s" % FILE
+				print("[MultiBoot switcher] error read file: %s" % FILE)
 		return data
 
 	def getCurrent(self):
@@ -374,22 +375,22 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			setmode = self.optionsList[self.option][0].split('=')[1]
 			#verify entries
 			if cmdx != len(temp) or 'boot' != temp[0] or 'rw' != temp[5] or cmd4 != temp[6] or kernel != root - kernel - 1 or "'" != ENTRY[-1:]:
-				print "[MultiBoot switcher] Command line in '/boot/STARTUP' - problem with not matching entries!"
+				print("[MultiBoot switcher] Command line in '/boot/STARTUP' - problem with not matching entries!")
 				ret = True
 			#verify length
 			elif ('boxmode' not in ENTRY and len(ENTRY) > 96) or ('boxmode' in ENTRY and len(ENTRY) > 115):
-				print "[MultiBoot switcher] Command line in '/boot/STARTUP' - problem with line length!"
+				print("[MultiBoot switcher] Command line in '/boot/STARTUP' - problem with line length!")
 				ret = True
 			#verify boxmode
 			elif bootmode != setmode and not self.option_enabled:
-				print "[MultiBoot switcher] Command line in '/boot/STARTUP' - problem with unsupported boxmode!"
+				print("[MultiBoot switcher] Command line in '/boot/STARTUP' - problem with unsupported boxmode!")
 				ret = True
 			#verify device
 			elif not device in getextdevices("ext4"):
-				print "[MultiBoot switcher] Command line in '/boot/STARTUP' - boot device not exist!"
+				print("[MultiBoot switcher] Command line in '/boot/STARTUP' - boot device not exist!")
 				ret = True
 		except:
-			print "[MultiBoot switcher] Command line in '/boot/STARTUP' - unknown problem!"
+			print("[MultiBoot switcher] Command line in '/boot/STARTUP' - unknown problem!")
 			ret = True
 		return ret
 
@@ -411,7 +412,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 			self.session.open(MessageBox, _("Error reading image from file '/boot/%s'!\nPlease flashing another image for this partition.") % self.list[self.selection], MessageBox.TYPE_ERROR)
 
 	def saved(self):
-		print "[MultiBoot switcher] select new startup: ", self.list[self.selection]
+		print("[MultiBoot switcher] select new startup: ", self.list[self.selection])
 		ret = os.system("cp -f '/boot/%s' /boot/STARTUP" % self.list[self.selection])
 		if ret:
 			self.session.open(MessageBox, _("File '/boot/%s' copy to '/boot/STARTUP' failed!") % self.list[self.selection], MessageBox.TYPE_ERROR)
@@ -459,7 +460,7 @@ class MultiBootSwitcher(ConfigListScreen, Screen):
 
 		message = _("Do you want to reboot now with selected image?")
 		if failboot:
-			print "[MultiBoot switcher] wrong bootsettings: " + boot
+			print("[MultiBoot switcher] wrong bootsettings: " + boot)
 			if '/dev/mmcblk0p3' in getextdevices("ext4"):
 				if self.writeFile('/boot/STARTUP', "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait'"):
 					txt = _("Next boot will start from Image 1.")
