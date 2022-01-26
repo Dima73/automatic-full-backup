@@ -1,3 +1,4 @@
+from __future__ import print_function
 import time
 import os
 import gettext
@@ -175,7 +176,7 @@ def Freespace(dev):
 	try:
 		statdev = os.statvfs(dev)
 		space = (statdev.f_bavail * statdev.f_frsize) / 1024
-		print "[FullBackup] Free space on %s = %i kilobytes" % (dev, space)
+		print("[FullBackup] Free space on %s = %i kilobytes" % (dev, space))
 		return space
 	except:
 		return 0
@@ -303,10 +304,10 @@ def runBackup():
 			if cmd:
 				os.system(cmd)
 			else:
-				print "[FullBackup] not supported receiver!"
+				print("[FullBackup] not supported receiver!")
 				return
-		except Exception, e:
-			print "[FullBackup] FAIL:", e
+		except Exception as e:
+			print("[FullBackup] FAIL:", e)
 			return
 		if Standby.inStandby and config.plugins.fullbackup.after_create.value and getFPWasTimerWakeup() and config.plugins.fullbackup.deepstandby.value == "2":
 			if not os.path.exists("/tmp/.fullbackup"):
@@ -543,8 +544,8 @@ class FullBackupConfig(ConfigListScreen, Screen):
 				st = os.stat(os.path.join(path, ".timestamp"))
 				self.isActive = True
 				self["status"].setText(_("Last backup date") + ": " + " ".join(FuzzyTime(st.st_mtime)))
-			except Exception, ex:
-				print "Failed to stat %s: %s" % (path, ex)
+			except Exception as ex:
+				print("Failed to stat %s: %s" % (path, ex))
 				self.isActive = False
 				self["status"].setText(_("Disabled"))
 		self.isStatusUploadOMB()
@@ -646,11 +647,11 @@ class FullBackupConfig(ConfigListScreen, Screen):
 		if recovery:
 			cmd += " %s" % "recovery"
 		if self.container.execute(cmd):
-			print "[FullBackup] failed to execute"
+			print("[FullBackup] failed to execute")
 			self.showOutput()
 
 	def appClosed(self, retval):
-		print "[FullBackup] done:", retval
+		print("[FullBackup] done:", retval)
 		if retval:
 			txt = _("Failed")
 		else:
@@ -1798,13 +1799,13 @@ def filescan_open(list, session, **kwargs):
 	try:
 		file = list[0].path
 		dir = os.path.split(file)[0]
-		print '[FullBackup] current dir is %s' % dir
+		print('[FullBackup] current dir is %s' % dir)
 		if dir != "" and dir != "/" and "/media/" in dir:
 			session.openWithCallback(boundFunction(msgManualBackupClosed, curdir=dir), GreatingManualBackup, dir)
 		else:
 			session.open(MessageBox, _("Read error current dir, sorry."), MessageBox.TYPE_ERROR)
 	except:
-		print "[FullBackup] read error current dir, sorry"
+		print("[FullBackup] read error current dir, sorry")
 
 
 def start_filescan(**kwargs):
