@@ -324,8 +324,7 @@ def runCleanup():
 		return
 	if olderthen and destination:
 		try:
-			backupList = os.listdir('%s/automatic_fullbackup' % (destination))
-			backupList.sort()
+			backupList = sorted(os.listdir('%s/automatic_fullbackup' % (destination)))
 		except:
 			backupList = []
 		if len(backupList) > 0:
