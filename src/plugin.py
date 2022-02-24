@@ -158,17 +158,17 @@ if not os.path.exists(ofgwrite_bin):
 	if 'mips' in arch:
 		MIPS = "/usr/lib/enigma2/python/Plugins/Extensions/FullBackup/bin/mips/ofgwrite"
 		if os.path.exists(MIPS):
-			os.chmod(MIPS, 0755)
+			os.chmod(MIPS, 0o755)
 			ofgwrite_bin = MIPS
 	elif 'armv7l' in arch:
 		ARMV71 = "/usr/lib/enigma2/python/Plugins/Extensions/FullBackup/bin/armv7l/ofgwrite"
 		if os.path.exists(ARMV71):
-			os.chmod(ARMV71, 0755)
+			os.chmod(ARMV71, 0o755)
 			ofgwrite_bin = ARMV71
 	elif 'sh4' in arch:
 		SH4 = "/usr/lib/enigma2/python/Plugins/Extensions/FullBackup/bin/sh4/ofgwrite"
 		if os.path.exists(SH4):
-			os.chmod(SH4, 0755)
+			os.chmod(SH4, 0o755)
 			ofgwrite_bin = SH4
 
 
@@ -261,22 +261,22 @@ def installUtilblkidCallback(answer):
 def backupCommand():
 	try:
 		if os.path.exists(BACKUP_SCRIPT):
-			os.chmod(BACKUP_SCRIPT, 0755)
+			os.chmod(BACKUP_SCRIPT, 0o755)
 	except:
 		pass
 	try:
 		if os.path.exists(DREAM_BACKUP_SCRIPT):
-			os.chmod(DREAM_BACKUP_SCRIPT, 0755)
+			os.chmod(DREAM_BACKUP_SCRIPT, 0o755)
 	except:
 		pass
 	try:
 		if os.path.exists(VU4K_BACKUP_SCRIPT):
-			os.chmod(VU4K_BACKUP_SCRIPT, 0755)
+			os.chmod(VU4K_BACKUP_SCRIPT, 0o755)
 	except:
 		pass
 	try:
 		if os.path.exists(HD51_BACKUP_SCRIPT):
-			os.chmod(HD51_BACKUP_SCRIPT, 0755)
+			os.chmod(HD51_BACKUP_SCRIPT, 0o755)
 	except:
 		pass
 	if BOX_NAME == 'none':
@@ -1127,7 +1127,7 @@ class FlashImageConfig(Screen):
 						message += "'"
 			try:
 				if os.path.exists(ofgwrite_bin):
-					os.chmod(ofgwrite_bin, 0755)
+					os.chmod(ofgwrite_bin, 0o755)
 				else:
 					self.session.open(MessageBox, _("'ofgwrite' not installed!"), MessageBox.TYPE_ERROR)
 					return
