@@ -1767,7 +1767,7 @@ def msgManualBackupClosed(ret, curdir=None):
 def menu(menuid, **kwargs):
 	if menuid == "shutdown" and config.plugins.fullbackup.multiboot_switcher_standbymenu.value:
 		return [(_("MultiBoot switcher"), openMultiBootSwitcher, "multiboot_switcher", 4)]
- 	return []
+	return []
 
 
 from MultiBootSwitcher import MultiBootSwitcher
