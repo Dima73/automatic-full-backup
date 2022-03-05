@@ -1770,7 +1770,7 @@ def menu(menuid, **kwargs):
 	return []
 
 
-from MultiBootSwitcher import MultiBootSwitcher
+from .MultiBootSwitcher import MultiBootSwitcher
 
 
 def openMultiBootSwitcher(session, **kwargs):
