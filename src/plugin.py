@@ -677,7 +677,7 @@ class BackupConsole(Console):
 		self.dir = dir
 		self.is_hide = False
 
-	def cancel(self):
+	def closeConsole(self):
 		if (self.run == len(self.cmdlist)) or self.stop_run:
 			if self.is_hide:
 				self.is_hide = False
