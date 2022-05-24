@@ -135,19 +135,7 @@ elif [ -f /proc/stb/info/gbmodel ] && [ ! -f /proc/stb/info/hwmodel ]; then
 	if [ $MODEL = "gbquad4k" ] ; then
 		echo "Found GigaBlue UHD Quad 4K\n"
 		MODEL="quad4k"
-		MTDROOTFS=$(readlink /dev/root)
-		if [ $MTDROOTFS = "mmcblk0p3" ]; then
-			MTD_KERNEL="mmcblk0p2"
-		fi
-		if [ $MTDROOTFS = "mmcblk0p5" ]; then
-			MTD_KERNEL="mmcblk0p4"
-		fi
-		if [ $MTDROOTFS = "mmcblk0p7" ]; then
-			MTD_KERNEL="mmcblk0p6"
-		fi
-		if [ $MTDROOTFS = "mmcblk0p9" ]; then
-			MTD_KERNEL="mmcblk0p8"
-		fi
+		MTD_KERNEL="mmcblk0p4"
 		KERNELNAME="kernel.bin"
 		TYPE=GIGABLUE
 		SHOWNAME="Gigablue $MODEL"
@@ -157,16 +145,17 @@ elif [ -f /proc/stb/info/gbmodel ] && [ ! -f /proc/stb/info/hwmodel ]; then
 	elif [ $MODEL = "gbue4k" ] ; then
 		echo "Found GigaBlue UHD UE 4K\n"
 		MODEL="ue4k"
-		MTDROOTFS=$(readlink /dev/root)
-		if [ $MTDROOTFS = "mmcblk0p5" ]; then
-			MTD_KERNEL="mmcblk0p4"
-		fi
-		if [ $MTDROOTFS = "mmcblk0p7" ]; then
-			MTD_KERNEL="mmcblk0p6"
-		fi
-		if [ $MTDROOTFS = "mmcblk0p9" ]; then
-			MTD_KERNEL="mmcblk0p8"
-		fi
+		MTD_KERNEL="mmcblk0p4"
+		KERNELNAME="kernel.bin"
+		TYPE=GIGABLUE
+		SHOWNAME="Gigablue $MODEL"
+		MAINDEST="$DIRECTORY/gigablue/$MODEL"
+		EXTRA="$DIRECTORY/automatic_fullbackup/$DATE/gigablue"
+		echo "Destination        = $MAINDEST\n"
+	elif [ $MODEL = "gbx34k" ] ; then
+		echo "Found GigaBlue UHD X3 4K\n"
+		MODEL="x34k"
+		MTD_KERNEL="mmcblk0p4"
 		KERNELNAME="kernel.bin"
 		TYPE=GIGABLUE
 		SHOWNAME="Gigablue $MODEL"
