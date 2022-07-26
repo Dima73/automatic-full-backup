@@ -9,7 +9,7 @@ from Components.Label import Label
 from Components.Sources.StaticText import StaticText
 import os
 from enigma import eTimer
-from plugin import MODEL_NAME, _
+from .plugin import MODEL_NAME, _
 
 
 def getextdevices(ext):
