@@ -105,7 +105,7 @@ if [ -f /proc/stb/info/boxtype ] ; then
 		MTDBOOT="mmcblk0p1"
 		python /usr/lib/enigma2/python/Plugins/Extensions/FullBackup/findkerneldevice.py
 		KERNEL=`cat /sys/firmware/devicetree/base/chosen/kerneldev` 
-		KERNELNAME=${KERNEL:11:7}.bin
+		KERNELNAME="kernel.bin"
 		MAINDEST="$DIRECTORY/zgemma/$MODEL"
 		EXTRA="$DIRECTORY/automatic_fullbackup/$DATE/zgemma"
 	else
