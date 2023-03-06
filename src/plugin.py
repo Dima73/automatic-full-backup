@@ -31,6 +31,11 @@ from enigma import eTimer, eConsoleAppContainer
 import NavigationInstance
 from Tools import Notifications
 
+import six
+if six.PY3:
+	py3 = True
+else:
+	py3 = False
 from mimetypes import add_type
 add_type("application/x-full-backup", ".fbackup")
 
@@ -48,7 +53,7 @@ def _(txt):
 	return t
 
 
-PLUGIN_VERSION = _(" ver. ") + "7.0"
+PLUGIN_VERSION = _(" ver. ") + "7.1"
 
 BOX_NAME = "none"
 MODEL_NAME = "none"
@@ -661,7 +666,10 @@ class FullBackupConfig(ConfigListScreen, Screen):
 		self.changedWhere(config.plugins.fullbackup.where)
 
 	def dataAvail(self, str):
-		self.data += str
+		if py3:
+		self.data += str.decode()
+		else:
+			self.data += str
 		self.showOutput()
 
 
@@ -1497,7 +1505,7 @@ class AutoStartTimer:
 								end += 86400
 							if 0 < begin - time.time() <= 60 * 5 or abs(time.time() - begin) < 900 and end > time.time():
 								start_deepstandy = False
-								if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/EPGSaveLoadConfiguration.py"):
+								if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/EPGSaveLoadConfiguration.pyo") or fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/EPGSaveLoadConfiguration.pyc"):
 									try:
 										cur_day = int(now.tm_wday)
 										wakeup_day = config.plugins.epgrefresh_extra.day_refresh[cur_day].value
@@ -1507,7 +1515,7 @@ class AutoStartTimer:
 										start_deepstandy = True
 						except:
 							pass
-				if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/EPGImport.py") and fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/plugin.py"):
+				if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/plugin.pyc") or fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/plugin.pyo"):
 					now = time.localtime(time.time())
 					cur_day = int(now.tm_wday)
 					try:
