@@ -667,7 +667,7 @@ class FullBackupConfig(ConfigListScreen, Screen):
 
 	def dataAvail(self, str):
 		if py3:
-		self.data += str.decode()
+			self.data += str.decode()
 		else:
 			self.data += str
 		self.showOutput()
