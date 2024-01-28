@@ -1481,7 +1481,7 @@ class AutoStartTimer:
 						return
 				except:
 					pass
-				if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/EPGRefresh.pyc") or fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/plugin.pyo"):
+				if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/plugin.pyc") or fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/plugin.pyo"):
 					try:
 						deepstandy_options = config.plugins.epgrefresh.enabled.value and config.plugins.epgrefresh.wakeup.value and config.plugins.epgrefresh.afterevent.value
 					except:
