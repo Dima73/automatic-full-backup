@@ -1483,12 +1483,12 @@ class AutoStartTimer:
 					pass
 				if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/plugin.pyc") or fileExists("/usr/lib/enigma2/python/Plugins/Extensions/EPGRefresh/plugin.pyo"):
 					try:
-						deepstandy_options = config.plugins.epgrefresh.enabled.value and config.plugins.epgrefresh.wakeup.value and config.plugins.epgrefresh.afterevent.value
+						deepstandy_options = config.plugins.epgrefresh.enabled.value and config.plugins.epgrefresh.wakeup.value and config.plugins.epgrefresh.afterevent.value in ('auto', 'always')
 					except:
 						deepstandy_options = False
 					if deepstandy_options:
 						try:
-							now = time.localtime(time.time())
+							now = time.localtime(int(time.time()))
 							begin = int(time.mktime(
 								(now.tm_year, now.tm_mon, now.tm_mday,
 								config.plugins.epgrefresh.begin.value[0],
