@@ -6,6 +6,7 @@ from Components.config import config, configfile, ConfigEnableDisable, ConfigSub
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Screens.ChoiceBox import ChoiceBox
+from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Screens.Console import Console
 from Components.ConfigList import ConfigListScreen
 from Components.ActionMap import ActionMap
@@ -53,7 +54,7 @@ def _(txt):
 	return t
 
 
-PLUGIN_VERSION = _(" ver. ") + "7.1"
+PLUGIN_VERSION = _(" ver. ") + "7.2"
 
 BOX_NAME = "none"
 MODEL_NAME = "none"
@@ -180,7 +181,7 @@ if not os.path.exists(ofgwrite_bin):
 def Freespace(dev):
 	try:
 		statdev = os.statvfs(dev)
-		space = (statdev.f_bavail * statdev.f_frsize) / 1024
+		space = int(statdev.f_bavail * statdev.f_frsize) // 1024
 		print("[FullBackup] Free space on %s = %i kilobytes" % (dev, space))
 		return space
 	except:
@@ -188,7 +189,7 @@ def Freespace(dev):
 
 
 def check_hdd(dir=""):
-	if not os.path.exists(dir):
+	if not os.path.isdir(dir) or not os.access(dir, os.F_OK | os.R_OK):
 		if Standby.inStandby is None:
 			_session and _session.open(MessageBox, _("AFB\nNot found mount device for create full backup!"), type=MessageBox.TYPE_ERROR)
 		return False
@@ -259,8 +260,8 @@ def runBlkid():
 
 
 def installUtilblkidCallback(answer):
-		if answer:
-			os.system("opkg update && opkg install util-linux-blkid && opkg install util-linux-sfdisk")
+	if answer:
+		os.system("opkg update && opkg install util-linux-blkid && opkg install util-linux-sfdisk")
 
 
 def backupCommand():
@@ -301,9 +302,7 @@ def backupCommand():
 
 def runBackup():
 	destination = config.plugins.fullbackup.where.value
-	if destination == 'none':
-		return
-	if destination:
+	if os.path.isdir(destination) and os.access(destination, os.F_OK | os.R_OK):
 		try:
 			cmd = backupCommand()
 			if cmd:
@@ -325,9 +324,7 @@ def runBackup():
 def runCleanup():
 	olderthen = int(config.plugins.fullbackup.autoclean.value)
 	destination = config.plugins.fullbackup.where.value
-	if destination == 'none':
-		return
-	if olderthen and destination:
+	if olderthen and os.path.isdir(destination) and os.access(destination, os.F_OK | os.R_OK):
 		try:
 			backupList = sorted(os.listdir('%s/automatic_fullbackup' % (destination)))
 		except:
@@ -398,7 +395,8 @@ class FullBackupConfig(ConfigListScreen, Screen):
 			getConfigListEntry(_("Show message during the start"), cfg.message),
 			]
 		self.configList = [
-			getConfigListEntry(_("Backup location"), cfg.add_to_where),
+			getConfigListEntry(_("Backup location"), cfg.where),
+			getConfigListEntry(_("Mountpoint (press OK)"), cfg.add_to_where),
 			getConfigListEntry(_("Automatic full backup"), cfg.enabled),
 			getConfigListEntry(_("Scan at automount for create backup"), cfg.autoscan),
 			getConfigListEntry(_("< Needs create file *(any name).fbackup in USB device >"), cfg.autoscan_nelp),
@@ -436,17 +434,18 @@ class FullBackupConfig(ConfigListScreen, Screen):
 		self.container = eConsoleAppContainer()
 		self.container.appClosed.append(self.appClosed)
 		self.container.dataAvail.append(self.dataAvail)
-		cfg.add_to_where.addNotifier(self.changedWhere)
 		self.onClose.append(self.__onClose)
 		self.onLayoutFinish.append(self.__layoutFinished)
+		self.changedWhere(config.plugins.fullbackup.where)
 		self.isStatusUploadOMB()
 
 	def __layoutFinished(self):
 		self.setTitle(self.setup_title)
 
 	def onEntryChanged(self):
+		self.changedWhere(config.plugins.fullbackup.where)
 		cur = self["config"].getCurrent()
-		if cur == self.configList[1]:
+		if cur and cur == self.configList[2]:
 			list = []
 			if cur[1].value and len(self.configList) == len(self["config"].list):
 				list = self.configList + self.appendList
@@ -461,17 +460,17 @@ class FullBackupConfig(ConfigListScreen, Screen):
 			x()
 
 	def getCurrentEntry(self):
-		return self["config"].getCurrent()[0]
+		return (self["config"].getCurrent() and self["config"].getCurrent()[0]) or ""
 
 	def getCurrentValue(self):
-		return str(self["config"].getCurrent()[1].getText())
+		return (self["config"].getCurrent() and str(self["config"].getCurrent()[1].getText())) or ""
 
 	def createSummary(self):
 		from Screens.Setup import SetupSummary
 		return SetupSummary
 
 	def isStatusUploadOMB(self):
-		if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot/plugin.pyo") and self.isActive:
+		if (fileExists("/usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot/plugin.pyo") or fileExists("/usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot/plugin.pyc")) and self.isActive:
 			self["ButtonMenu"].show()
 			self.statusUploadOMB = True
 		else:
@@ -536,7 +535,8 @@ class FullBackupConfig(ConfigListScreen, Screen):
 
 	def changedWhere(self, cfg):
 		self.isActive = False
-		if cfg.value == 'none':
+		destination = cfg.value
+		if not os.path.isdir(destination) or not os.access(destination, os.F_OK | os.R_OK):
 			self["status"].setText(_('Not selected directory backup'))
 			self.isStatusUploadOMB()
 			return
@@ -555,7 +555,7 @@ class FullBackupConfig(ConfigListScreen, Screen):
 		self.isStatusUploadOMB()
 
 	def __onClose(self):
-		config.plugins.fullbackup.add_to_where.notifiers.remove(self.changedWhere)
+		pass
 
 	def keyOk(self):
 		ConfigListScreen.keyOK(self)
@@ -566,6 +566,20 @@ class FullBackupConfig(ConfigListScreen, Screen):
 			self.session.open(DaysProfile)
 		elif sel == config.plugins.fullbackup.run_multbboot_switcher:
 			self.session.open(MultiBootSwitcher)
+		elif sel == config.plugins.fullbackup.add_to_where:
+			self.session.openWithCallback(self.mountpointCallback, MessageBox, _("Use this '%s' mountpoint?") % config.plugins.fullbackup.add_to_where.value, MessageBox.TYPE_YESNO)
+		elif sel == config.plugins.fullbackup.where:
+			self.session.openWithCallback(self.textCallback, VirtualKeyBoard, text=config.plugins.fullbackup.where.value)
+
+	def mountpointCallback(self,answer=None):
+		if answer:
+			config.plugins.fullbackup.where.value = config.plugins.fullbackup.add_to_where.value
+			self.onEntryChanged()
+
+	def textCallback(self, callback=None):
+		if callback:
+			config.plugins.fullbackup.where.value = callback
+			self.onEntryChanged()
 
 	def flashimage(self):
 		if BOX_NAME == 'none' or (BOX_NAME == 'dmm' and not (MODEL_NAME == "dm900" or MODEL_NAME == "dm920")):
@@ -583,15 +597,14 @@ class FullBackupConfig(ConfigListScreen, Screen):
 			if MODEL_NAME == "solo2" or MODEL_NAME == "duo2" or MODEL_NAME == "solose" or MODEL_NAME == "zero" or MODEL_NAME == "fusionhd" or MODEL_NAME == "fusionhdse" or MODEL_NAME == "purehd":
 				files = "^.*\.(zip|bin|update)"
 			else:
-				files = "^.*\.(zip|bin|jffs2)"
+				files = "^.*\.(zip|bin|jffs2)" 
 		curdir = '/media/'
 		self.session.open(FlashImageConfig, curdir, files)
 
 	def save(self):
-		if config.plugins.fullbackup.enabled.value == False:
+		if not config.plugins.fullbackup.enabled.value:
 			config.plugins.fullbackup.autoclean.value = "0"
 			config.plugins.fullbackup.message.value = "0"
-		config.plugins.fullbackup.where.value = config.plugins.fullbackup.add_to_where.value
 		config.plugins.fullbackup.where.save()
 		self.saveAll()
 		configfile.save()
@@ -606,13 +619,11 @@ class FullBackupConfig(ConfigListScreen, Screen):
 		self["status"].setText(self.data)
 
 	def dobackup(self):
-		if config.plugins.fullbackup.where.value == "none":
+		if not check_hdd(config.plugins.fullbackup.where.value):
 			self["status"].setText(_('Not selected directory backup'))
 			return
 		if MODEL_NAME == "none":
 			self.session.open(MessageBox, _("Your receiver not supported!"), MessageBox.TYPE_ERROR)
-			return
-		if not check_hdd(config.plugins.fullbackup.where.value):
 			return
 		list = [
 			(_("Background mode"), "background"),
