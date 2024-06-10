@@ -558,7 +558,7 @@ class FullBackupConfig(ConfigListScreen, Screen):
 		pass
 
 	def keyOk(self):
-		ConfigListScreen.keyOK(self)
+		#ConfigListScreen.keyOK(self)
 		sel = self["config"].getCurrent() and self["config"].getCurrent()[1]
 		if sel is None:
 			return
