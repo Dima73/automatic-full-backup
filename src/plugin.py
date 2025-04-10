@@ -54,7 +54,7 @@ def _(txt):
 	return t
 
 
-PLUGIN_VERSION = _(" ver. ") + "7.2"
+PLUGIN_VERSION = _(" ver. ") + "7.3"
 
 BOX_NAME = "none"
 MODEL_NAME = "none"
@@ -90,7 +90,7 @@ elif os.path.exists("/proc/stb/info/gbmodel") and not os.path.exists("/proc/stb/
 		f = open("/proc/stb/info/gbmodel")
 		MODEL_NAME = f.read().strip()
 		f.close()
-		if MODEL_NAME in ("gbquad4k", "gbue4k"):
+		if MODEL_NAME in ("gbquad4k", "gbue4k", "gbquad4kpro"):
 			BOX_NAME = "gigablue"
 	except:
 		pass
@@ -206,8 +206,8 @@ def check_hdd(dir=""):
 	return True
 
 
-emmc_multiboot = MODEL_NAME in ("hd51", "vs1500", "h7")
-emmc_multiboot1 = MODEL_NAME in ("gbquad4k", "gbue4k")
+emmc_multiboot = MODEL_NAME in ("hd51", "vs1500", "h7", "h17")
+emmc_multiboot1 = MODEL_NAME in ("gbquad4k", "gbue4k", "gbquad4kpro")
 
 
 def runBlkid():
@@ -292,9 +292,9 @@ def backupCommand():
 		cmd = DREAM_BACKUP_SCRIPT
 		if MODEL_NAME == "dm900" or MODEL_NAME == "dm920":
 			cmd = VU4K_BACKUP_SCRIPT
-	if (BOX_NAME == 'vu' and (MODEL_NAME == "solo4k" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k" or MODEL_NAME == "duo4kse")) or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbue4k":
+	if (BOX_NAME == 'vu' and (MODEL_NAME == "solo4k" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k" or MODEL_NAME == "duo4kse")) or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbquad4kpro" or MODEL_NAME == "gbue4k":
 		cmd = VU4K_BACKUP_SCRIPT
-	if MODEL_NAME == "hd51" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7":
+	if MODEL_NAME == "hd51" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "h17":
 		cmd = HD51_BACKUP_SCRIPT
 	cmd += " " + config.plugins.fullbackup.where.value
 	return cmd
@@ -505,7 +505,7 @@ class FullBackupConfig(ConfigListScreen, Screen):
 					files = "^.*\.(zip|bin)"
 					if MODEL_NAME == "fusionhd" or MODEL_NAME == "fusionhdse" or MODEL_NAME == "purehd":
 						files = "^.*\.(zip|bin|update)"
-					if MODEL_NAME == "hd51" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbue4k":
+					if MODEL_NAME == "hd51" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "h17" or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbquad4kpro" or MODEL_NAME == "gbue4k":
 						files = "^.*\.(zip|bz2|bin)"
 				elif BOX_NAME == "vu":
 					if MODEL_NAME == "solo4k" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k":
@@ -591,7 +591,7 @@ class FullBackupConfig(ConfigListScreen, Screen):
 		if not MODEL_NAME:
 			return
 		files = "^.*\.(zip|bin)"
-		if MODEL_NAME == "hd51" or MODEL_NAME == "solo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k" or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k" or MODEL_NAME == "duo4kse" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "dm900" or MODEL_NAME == "dm920" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbue4k":
+		if MODEL_NAME == "hd51" or MODEL_NAME == "solo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k" or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k" or MODEL_NAME == "duo4kse" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "h17" or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "dm900" or MODEL_NAME == "dm920" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbquad4kpro" or MODEL_NAME == "gbue4k":
 			files = "^.*\.(zip|bz2|bin)"
 		elif BOX_NAME == "vu":
 			if MODEL_NAME == "solo2" or MODEL_NAME == "duo2" or MODEL_NAME == "solose" or MODEL_NAME == "zero" or MODEL_NAME == "fusionhd" or MODEL_NAME == "fusionhdse" or MODEL_NAME == "purehd":
@@ -913,7 +913,7 @@ class FlashImageConfig(Screen):
 						no_backup_files = ["kernel_cfe_auto.bin", "root_cfe_auto.jffs2", "root_cfe_auto.bin", "rootfs.bin", "kernel.bin"]
 						text += 'oe_kernel.bin, oe_rootfs.bin'
 				elif os.path.exists("/proc/stb/info/boxtype") and not os.path.exists("/proc/stb/info/hwmodel") and not os.path.exists("/proc/stb/info/gbmodel"):
-					if MODEL_NAME in ["hd51", "sf4008", "vs1500", "et11000", "h7"]:
+					if MODEL_NAME in ["hd51", "sf4008", "vs1500", "et11000", "h7", "h17"]:
 						backup_files = [("kernel1.bin"), ("rootfs.tar.bz2"), ("kernel.bin")]
 						no_backup_files = ["kernel_cfe_auto.bin", "rootfs.bin", "root_cfe_auto.jffs2", "root_cfe_auto.bin"]
 						text += 'kernel.bin/kernel1.bin, rootfs.tar.bz2'
@@ -938,7 +938,7 @@ class FlashImageConfig(Screen):
 					if MODEL_NAME in ["gbquadplus"]:
 						backup_files = ["kernel.bin", "rootfs.bin"]
 						text += "kernel.bin, rootfs.bin"
-					if MODEL_NAME in ["gbquad4k", "gbue4k"]:
+					if MODEL_NAME in ["gbquad4k", "gbue4k", "gbquad4kpro"]:
 						backup_files = [("kernel1.bin"), ("rootfs.tar.bz2"), ("kernel.bin")]
 						no_backup_files = ["kernel_cfe_auto.bin", "rootfs.bin", "root_cfe_auto.jffs2", "root_cfe_auto.bin"]
 						text += 'kernel.bin/kernel1.bin, rootfs.tar.bz2'
@@ -1280,7 +1280,7 @@ class SearchOMBfile(Screen):
 						backup_files = [("rootfs.tar.bz2"), ("oe_kernel.bin")]
 						no_backup_files = ["kernel_cfe_auto.bin", "rootfs.bin", "root_cfe_auto.jffs2", "root_cfe_auto.bin"]
 						text += 'oe_kernel.bin, rootfs.tar.bz2'
-					elif (MODEL_NAME == "hd51" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7"):
+					elif (MODEL_NAME == "hd51" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "h17"):
 						backup_files = [("kernel1.bin"), ("rootfs.tar.bz2"), ("kernel.bin")]
 						no_backup_files = ["kernel_cfe_auto.bin", "rootfs.bin", "root_cfe_auto.jffs2", "root_cfe_auto.bin"]
 						text += 'kernel.bin/kernel1.bin, rootfs.tar.bz2'
@@ -1309,11 +1309,11 @@ class SearchOMBfile(Screen):
 						no_backup_files = ["kernel_cfe_auto.bin", "rootfs.bin", "root_cfe_auto.jffs2", "root_cfe_auto.bin"]
 						text += 'kernel.bin/kernel1.bin, rootfs.tar.bz2'
 				elif BOX_NAME == "gigablue":
-					if MODEL_NAME in ("gbquad4k", "gbue4k"):
+					if MODEL_NAME in ("gbquad4k", "gbue4k", "gbquad4kpro"):
 						backup_files = [("kernel1.bin"), ("rootfs.tar.bz2"), ("kernel.bin")]
 						no_backup_files = ["kernel_cfe_auto.bin", "rootfs.bin", "root_cfe_auto.jffs2", "root_cfe_auto.bin"]
 						text += 'kernel.bin/kernel1.bin, rootfs.tar.bz2'
-						self.model = MODEL_NAME == "gbquad4k" and "quad4k" or "ue4k"
+						self.model = MODEL_NAME == "gbquad4k" and "quad4k" or "gbquad4kpro" and "quad4kpro" or "ue4k"
 				try:
 					text += _('\nThe found files:')
 					for name in os.listdir(dirname):
@@ -1734,7 +1734,7 @@ def WakeupDayOfWeek():
 class GreatingManualBackup(MessageBox):
 	def __init__(self, session, dir):
 		try:
-			#if MODEL_NAME == "hd51" or MODEL_NAME == "vs1500" or MODEL_NAME == "h7":
+			#if MODEL_NAME == "hd51" or MODEL_NAME == "vs1500" or MODEL_NAME == "h7" or MODEL_NAME == "h17:
 			#	list = [(_("Yes"), True), (_("Yes") + _(" as recovery"), "recovery"), (_("No"), False)]
 			#	MessageBox.__init__(self, session, text=_("Do you really want to create a full backup in directory %s ?") % dir, list=list)
 			#else:
@@ -1758,9 +1758,9 @@ def msgManualBackupClosed(ret, curdir=None):
 					cmd = DREAM_BACKUP_SCRIPT
 					if MODEL_NAME == "dm900" or MODEL_NAME == "dm920":
 						cmd = VU4K_BACKUP_SCRIPT
-				elif (BOX_NAME == 'vu' and (MODEL_NAME == "solo4k" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k" or MODEL_NAME == "duo4kse")) or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbue4k":
+				elif (BOX_NAME == 'vu' and (MODEL_NAME == "solo4k" or MODEL_NAME == "uno4k" or MODEL_NAME == "ultimo4k" or MODEL_NAME == "uno4kse" or MODEL_NAME == "zero4k" or MODEL_NAME == "duo4k" or MODEL_NAME == "duo4kse")) or MODEL_NAME == "lunix4k" or MODEL_NAME == "lunix3-4k" or MODEL_NAME == "gbquad4k" or MODEL_NAME == "gbquad4kpro" or MODEL_NAME == "gbue4k":
 					cmd = VU4K_BACKUP_SCRIPT
-				elif MODEL_NAME == "hd51" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7":
+				elif MODEL_NAME == "hd51" or MODEL_NAME == "sf4008" or MODEL_NAME == "vs1500" or MODEL_NAME == "et11000" or MODEL_NAME == "h7" or MODEL_NAME == "h17":
 					cmd = HD51_BACKUP_SCRIPT
 				cmd += " %s" % curdir
 				if os.path.exists(zip_bin):

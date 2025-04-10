@@ -70,13 +70,9 @@ if [ -f /proc/stb/info/boxtype ] ; then
 	if [ $MODEL = "hd51" ] ; then
 		TYPE=MUTANT
 		echo "Found Mutant HD51 4K\n"
-		#MTD_KERNEL="mmcblk0p2"
-		MTD_KERNEL="kernel"
+		MTD_KERNEL="mmcblk0p2"
 		MTDBOOT="mmcblk0p1"
-		python /usr/lib/enigma2/python/Plugins/Extensions/FullBackup/findkerneldevice.py
-		KERNEL=`cat /sys/firmware/devicetree/base/chosen/kerneldev` 
-		KERNELNAME=${KERNEL:11:7}.bin
-		echo "$KERNELNAME = STARTUP_${KERNEL:17:1}"
+		KERNELNAME="kernel.bin"
 	elif [ $MODEL = "sf4008" ] ; then
 		TYPE=OCTAGON
 		echo "Found Octagon SF4008 4K\n"
@@ -85,12 +81,9 @@ if [ -f /proc/stb/info/boxtype ] ; then
 	elif [ $MODEL = "vs1500" ] ; then
 		TYPE=VIMASTEC
 		echo "Found VIMASTEC VS1500 4K\n"
-		#MTD_KERNEL="mmcblk0p2"
-		MTD_KERNEL="kernel"
+		MTD_KERNEL="mmcblk0p2"
 		MTDBOOT="mmcblk0p1"
-		python /usr/lib/enigma2/python/Plugins/Extensions/FullBackup/findkerneldevice.py
-		KERNEL=`cat /sys/firmware/devicetree/base/chosen/kerneldev` 
-		KERNELNAME=${KERNEL:11:7}.bin
+		KERNELNAME="kernel.bin"
 	elif [ $MODEL = "et11000" ] ; then
 		TYPE=GI
 		MODEL="et1x000"
@@ -100,11 +93,16 @@ if [ -f /proc/stb/info/boxtype ] ; then
 	elif [ $MODEL = "h7" ] ; then
 		TYPE=ZGEMMA
 		echo "Found Zgemma H7 4K\n"
-		#MTD_KERNEL="mmcblk0p2"
-		MTD_KERNEL="kernel"
+		MTD_KERNEL="mmcblk0p2"
 		MTDBOOT="mmcblk0p1"
-		python /usr/lib/enigma2/python/Plugins/Extensions/FullBackup/findkerneldevice.py
-		KERNEL=`cat /sys/firmware/devicetree/base/chosen/kerneldev` 
+		KERNELNAME="kernel.bin"
+		MAINDEST="$DIRECTORY/zgemma/$MODEL"
+		EXTRA="$DIRECTORY/automatic_fullbackup/$DATE/zgemma"
+	elif [ $MODEL = "h17" ] ; then
+		TYPE=ZGEMMA
+		echo "Found Zgemma H17 4K\n"
+		MTD_KERNEL="mmcblk0p2"
+		MTDBOOT="mmcblk0p1"
 		KERNELNAME="kernel.bin"
 		MAINDEST="$DIRECTORY/zgemma/$MODEL"
 		EXTRA="$DIRECTORY/automatic_fullbackup/$DATE/zgemma"
@@ -305,24 +303,9 @@ fi
 mkdir -p /tmp/bi/root
 echo "Create directory   = /tmp/bi/root\n"
 sync
-if [ $MODEL = "hd51" ] || [ $MODEL = "vs1500" ] || [ $MODEL = "h7" ] ; then
-	MTDROOTFS=$(readlink /dev/root)
-	if [ $MTDROOTFS = "mmcblk0p3" ]; then
-		MTD_KERNEL="mmcblk0p2"
-	fi
-	if [ $MTDROOTFS = "mmcblk0p5" ]; then
-		MTD_KERNEL="mmcblk0p4"
-	fi
-	if [ $MTDROOTFS = "mmcblk0p7" ]; then
-		MTD_KERNEL="mmcblk0p6"
-	fi
-	if [ $MTDROOTFS = "mmcblk0p9" ]; then
-		MTD_KERNEL="mmcblk0p8"
-	fi
-	mount /dev/${MTDROOTFS} /tmp/bi/root
-else
-	mount --bind / /tmp/bi/root
-fi
+
+mount --bind / /tmp/bi/root
+
 
 
 #dd if=/dev/$MTD_KERNEL of=$WORKDIR/kernel.dump

@@ -142,6 +142,15 @@ elif [ -f /proc/stb/info/gbmodel ] && [ ! -f /proc/stb/info/hwmodel ]; then
 		MAINDEST="$DIRECTORY/gigablue/$MODEL"
 		EXTRA="$DIRECTORY/automatic_fullbackup/$DATE/gigablue"
 		echo "Destination        = $MAINDEST\n"
+	elif [ $MODEL = "gbquad4kpro" ] ; then
+		echo "Found GigaBlue UHD Quad PRO 4K\n"
+		MODEL="quad4kpro"
+		MTD_KERNEL="mmcblk0p4"
+		KERNELNAME="kernel.bin"
+		TYPE=GIGABLUE
+		SHOWNAME="Gigablue $MODEL"
+		MAINDEST="$DIRECTORY/gigablue/$MODEL"
+		EXTRA="$DIRECTORY/automatic_fullbackup/$DATE/gigablue"
 	elif [ $MODEL = "gbue4k" ] ; then
 		echo "Found GigaBlue UHD UE 4K\n"
 		MODEL="ue4k"
